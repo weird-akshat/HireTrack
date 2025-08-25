@@ -162,13 +162,15 @@ public class JobListingService {
 
         }
         catch (Exception e){
-            System.out.println("HEllo");
+            System.out.println("Exception occurred in JobListingService class");
+
+            return null;
 
         }
 
-//
+//        return null;
 
-//        return ();
+
 
     }
 

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.placementportal.messageAnalyzer.dto.JobListingRequest;
 import com.placementportal.messageAnalyzer.dto.JobListingResponse;
 import com.placementportal.messageAnalyzer.entity.JobListing;
+import com.placementportal.messageAnalyzer.mapper.JobListingMapper;
 import com.placementportal.messageAnalyzer.repo.JobListingRepo;
 import com.placementportal.messageAnalyzer.service.JobListingService;
+import kotlin.collections.ArrayDeque;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,10 +34,16 @@ public class JobListingController {
 
 
     @GetMapping
-    public ResponseEntity<List<JobListing>> getJobListings(){
+    public ResponseEntity<List<JobListingResponse>> getJobListings(){
         List<JobListing> allJobs = jobListingRepo.findAll();
+        List<JobListingResponse> list= new ArrayDeque<>();
+        JobListingMapper mapper = new JobListingMapper();
+        for (JobListing jobListing: allJobs){
+            list.add((mapper.toDto(jobListing)));
+        }
 
-        return ResponseEntity.ok(allJobs);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+
     }
 
 
@@ -45,9 +53,9 @@ public class JobListingController {
 
         try{
             JobListing response = jobListingService.createJobListing(string);
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String,Object> map = mapper.convertValue(response, Map.class);
-            JobListingResponse res = new JobListingResponse(map);
+            JobListingMapper mapper = new JobListingMapper();
+            JobListingResponse res = mapper.toDto(response);
+
 
             return new ResponseEntity<>(res,HttpStatus.CREATED);
         }
