@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Entity
@@ -18,21 +19,35 @@ public class JobListing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String companyName;
     private String offerType;
     private String category;
     private String jobProfile;
     private String jobDescription;
-    private List<String> eligibleBranches;
-    private List<String> eligibilityCriteria;
     private String stipend;
-    private LocalDateTime deadline;
     private String accommodationAllowance;
     private String onConversionCTC;
+
+    private LocalDateTime deadline;
+
+    @ElementCollection
+    private List<String> eligibleBranches;
+
+    @ElementCollection
+    private List<String> eligibilityCriteria;
+
+    @ElementCollection
     private List<String> workLocation;
-    private HashMap<String,String> events;
-    private HashMap<String,String> selectionProcess;
-    private HashMap<String,String> registrationLinks;
+
+    @ElementCollection
+    private Map<String,String> events;
+
+    @ElementCollection
+    private Map<String,String> selectionProcess;
+
+    @ElementCollection
+    private Map<String,String> registrationLinks;
 
 
 }

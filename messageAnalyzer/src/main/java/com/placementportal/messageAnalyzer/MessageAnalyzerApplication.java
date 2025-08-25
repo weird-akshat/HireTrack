@@ -17,6 +17,3 @@ public class MessageAnalyzerApplication {
 }
 
 
-
-//the main idea of this microservice is to get the message from the messageListener
-//format it properly if
