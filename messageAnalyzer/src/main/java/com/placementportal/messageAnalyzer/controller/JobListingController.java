@@ -1,5 +1,6 @@
 package com.placementportal.messageAnalyzer.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.placementportal.messageAnalyzer.dto.JobListingRequest;
 import com.placementportal.messageAnalyzer.dto.JobListingResponse;
 import com.placementportal.messageAnalyzer.entity.JobListing;
@@ -43,9 +44,12 @@ public class JobListingController {
         String string = reqBody.text();
 
         try{
-            Map<String, Object> response = jobListingService.createJobListing(string);
+            JobListing response = jobListingService.createJobListing(string);
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String,Object> map = mapper.convertValue(response, Map.class);
+            JobListingResponse res = new JobListingResponse(map);
 
-            return new ResponseEntity<>(new JobListingResponse(response),HttpStatus.CREATED);
+            return new ResponseEntity<>(res,HttpStatus.CREATED);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -34,7 +34,7 @@ public class JobListingService {
         this.jobListingRepo = jobListingRepo;
     }
     @Transactional
-    public Map<String, Object> createJobListing(String jobListingMessage){
+    public JobListing createJobListing(String jobListingMessage){
         final RestTemplate restTemplate = new RestTemplate();
         Dotenv dotenv= Dotenv.load();
         // WhatsApp message
@@ -45,9 +45,10 @@ public class JobListingService {
 
         // Build the request payload using Maps
         Map<String, Object> part = new HashMap<>();
-        part.put("text", "Extract the following job listing into a structured JSON object following the JobListing schema. " +
-                "Ensure that all date fields (e.g., deadline) are returned in ISO 8601 format (yyyy-MM-dd'T'HH:mm:ss) " +
-                "so they can be directly parsed into DateTime objects in Java:\n\n" + jobListingMessage);
+        part.put("text", "Extract the following job listing into JSON following the JobListing schema. " +
+                "Ensure that fields `selectionProcess`, `events`, and `registrationLinks` are always returned as JSON objects (maps), even if only one entry exists. " +
+                "All date fields should be in ISO 8601 format (yyyy-MM-dd'T'HH:mm:ss):\n\n" + jobListingMessage);
+
 
 
         Map<String, Object> content = new HashMap<>();
@@ -80,9 +81,20 @@ public class JobListingService {
                 "type", "array",
                 "items", Map.of("type", "string")
         ));
-        properties.put("events", Map.of("type", "object"));
-        properties.put("selectionProcess", Map.of("type", "object"));
-        properties.put("registrationLinks", Map.of("type", "object"));
+        properties.put("selectionProcess", Map.of(
+                "type", "object",
+                "description", "A map describing each selection round or step. Example: { 'Round 1': 'Online Test', 'Round 2': 'Interview' }"
+        ));
+
+        properties.put("events", Map.of(
+                "type", "object",
+                "description", "A map of events with names as keys and dates as values. Example: { 'Orientation': '2025-09-01' }"
+        ));
+
+        properties.put("registrationLinks", Map.of(
+                "type", "object",
+                "description", "A map of registration links with descriptions as keys and URLs as values. Example: { 'Form': 'https://link.com' }"
+        ));
         toolFunction.put("parameters", Map.of("type", "object", "properties", properties));
 
         Map<String, Object> tool = new HashMap<>();
@@ -126,25 +138,27 @@ public class JobListingService {
             jobListing.setEligibleBranches((List<String>) jobMap.get("eligibleBranches"));
             jobListing.setEligibilityCriteria((List<String>) jobMap.get("eligibilityCriteria"));
             jobListing.setWorkLocation((List<String>) jobMap.get("workLocation"));
-            System.out.println("done1");
+//            System.out.println("done1");
 // Maps
             // Usage
             jobListing.setEvents(convertToStringMap((Map<?,?>) jobMap.get("events")));
             jobListing.setSelectionProcess(convertToStringMap((Map<?,?>) jobMap.get("selectionProcess")));
             jobListing.setRegistrationLinks(convertToStringMap((Map<?,?>) jobMap.get("registrationLinks")));
 
-            System.out.println("done2");
+//            System.out.println("done2");
 // Deadline (ISO 8601 string -> LocalDateTime)
             String deadlineStr = (String) jobMap.get("deadline");
             if (deadlineStr != null && !deadlineStr.isEmpty()) {
                 jobListing.setDeadline(LocalDateTime.parse(deadlineStr, DateTimeFormatter.ISO_DATE_TIME));
             }
-            System.out.println("done3");
+//            System.out.println("done3");
+
+
 
 
 // Now jobListing is fully populated
             jobListingRepo.save(jobListing);
-
+            return jobListing;
 
         }
         catch (Exception e){
@@ -154,7 +168,7 @@ public class JobListingService {
 
 //
 
-        return response.getBody();
+//        return ();
 
     }
 
