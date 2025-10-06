@@ -2,13 +2,15 @@ package com.placementportal.messageAnalyzer.mapper;
 
 import com.placementportal.messageAnalyzer.dto.JobListingResponse;
 import com.placementportal.messageAnalyzer.entity.JobListing;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class JobListingMapper {
 
-    public static JobListingResponse toDto(JobListing jobListing) {
+    public JobListingResponse toDto(JobListing jobListing) {
         Map<String, Object> map = new HashMap<>();
 
         // Simple fields

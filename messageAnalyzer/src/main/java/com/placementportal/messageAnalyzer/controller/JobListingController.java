@@ -15,8 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/job-listings")
@@ -24,10 +27,11 @@ public class JobListingController {
 
     private final JobListingService jobListingService;
     private final JobListingRepo jobListingRepo;
-    public JobListingController(JobListingService jobListingService, JobListingRepo jobListingRepo) {
+    private final JobListingMapper mapper;
+    public JobListingController(JobListingService jobListingService, JobListingRepo jobListingRepo, JobListingMapper jobListingMapper) {
          this.jobListingService= jobListingService;
          this.jobListingRepo= jobListingRepo;
-
+         this.mapper= jobListingMapper;
 
 
     }
@@ -36,11 +40,10 @@ public class JobListingController {
     @GetMapping
     public ResponseEntity<List<JobListingResponse>> getJobListings(){
         List<JobListing> allJobs = jobListingRepo.findAll();
-        List<JobListingResponse> list= new ArrayDeque<>();
-        JobListingMapper mapper = new JobListingMapper();
-        for (JobListing jobListing: allJobs){
-            list.add((mapper.toDto(jobListing)));
-        }
+        List<JobListingResponse> list = allJobs.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+
 
         return new ResponseEntity<>(list,HttpStatus.OK);
 
@@ -53,7 +56,7 @@ public class JobListingController {
 
         try{
             JobListing response = jobListingService.createJobListing(string);
-            JobListingMapper mapper = new JobListingMapper();
+
             JobListingResponse res = mapper.toDto(response);
 
 
