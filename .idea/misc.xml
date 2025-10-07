@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/eurekaserver/pom.xml" />
         <option value="$PROJECT_DIR$/messageAnalyzer/pom.xml" />
         <option value="$PROJECT_DIR$/messageAnalyzer1/pom.xml" />
+        <option value="$PROJECT_DIR$/message-extractor/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
