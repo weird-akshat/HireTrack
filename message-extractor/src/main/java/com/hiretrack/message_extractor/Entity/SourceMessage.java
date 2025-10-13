@@ -1,20 +1,22 @@
 package com.hiretrack.message_extractor.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor // required by JPA
+@AllArgsConstructor // optional: useful for testing or mapping
+@Builder
+// optional: for clean object creation
 @Entity
+
+
 public class SourceMessage {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String contentType;
     private long size;
