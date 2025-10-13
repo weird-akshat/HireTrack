@@ -6,10 +6,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor // required by JPA
-@AllArgsConstructor // optional: useful for testing or mapping
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-// optional: for clean object creation
 @Entity
 
 
@@ -22,6 +21,7 @@ public class SourceMessage {
     private long size;
     private LocalDateTime timeStamp;
     @Lob
-    private String fileData;
+    @Column(columnDefinition = "LONGBLOB") 
+    private byte[] fileData;
 
 }
