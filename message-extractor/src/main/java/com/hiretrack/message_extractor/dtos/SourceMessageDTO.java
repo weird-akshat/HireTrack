@@ -11,5 +11,5 @@ public class SourceMessageDTO {
     private long size;
     private LocalDateTime timeStamp;
     @Lob
-    private String fileData;
+    private byte[] fileData;
 }
