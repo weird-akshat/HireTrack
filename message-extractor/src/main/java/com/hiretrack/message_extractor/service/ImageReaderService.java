@@ -24,7 +24,8 @@ public class ImageReaderService {
             }
 
             ITesseract tesseract = new Tesseract();
-
+            tesseract.setDatapath("/usr/share/tesseract/tessdata");
+            tesseract.setLanguage("eng");
             return tesseract.doOCR(bufferedImage);
 
         } catch (Exception e) {

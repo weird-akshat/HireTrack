@@ -21,7 +21,6 @@ public class SourceMessage {
     private long size;
     private LocalDateTime timeStamp;
     @Lob
-    @Column(columnDefinition = "BYTEA")
     private byte[] fileData;
 
 }

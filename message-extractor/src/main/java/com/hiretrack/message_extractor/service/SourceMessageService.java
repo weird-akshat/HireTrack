@@ -9,6 +9,7 @@ import com.hiretrack.message_extractor.dtos.SourceMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.boot.jaxb.SourceType;
+import org.hibernate.result.Output;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -25,13 +26,24 @@ public class SourceMessageService {
     private final ImageReaderService imageReaderService;
     private final ExcelReaderService excelReaderService;
 
+    public List<OutputMessage> saveAndConvertToText(ChunkMessageDTO chunkMessageDTO){
+        List<OutputMessage> list= extractAll(storeMessages(chunkMessageDTO));
+        System.out.println(list);
+        return list;
+    }
+
     public List<SourceMessage> storeMessages(ChunkMessageDTO chunkMessageDTO){
         List<SourceMessage> messages = new ArrayList<>();
+        log.info("begin");
         for (SourceMessageDTO sourceMessageDTO : chunkMessageDTO.getMessages()){
+            log.info("begin1");
            SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
+            log.info("begin2");
             sourceMessageRepo.save(sourceMessage);
+            log.info("begin3");
             messages.add(sourceMessage);
         }
+        log.info("end");
 
         return messages;
     }
