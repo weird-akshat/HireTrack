@@ -1,4 +1,4 @@
-package com.hiretrack.message_extractor.Entity;
+package com.hiretrack.message_extractor.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

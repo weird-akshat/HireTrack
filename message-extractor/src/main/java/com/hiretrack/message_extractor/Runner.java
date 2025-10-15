@@ -1,8 +1,8 @@
 package com.hiretrack.message_extractor;
 
-import com.hiretrack.message_extractor.Entity.SourceMessage;
-import com.hiretrack.message_extractor.Repo.SourceMessageRepo;
-import com.hiretrack.message_extractor.Service.PdfReaderService;
+import com.hiretrack.message_extractor.entity.SourceMessage;
+import com.hiretrack.message_extractor.repo.SourceMessageRepo;
+import com.hiretrack.message_extractor.service.PdfReaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

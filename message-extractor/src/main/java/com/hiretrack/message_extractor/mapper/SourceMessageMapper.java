@@ -1,6 +1,6 @@
-package com.hiretrack.message_extractor.Mapper;
+package com.hiretrack.message_extractor.mapper;
 
-import com.hiretrack.message_extractor.Entity.SourceMessage;
+import com.hiretrack.message_extractor.entity.SourceMessage;
 import com.hiretrack.message_extractor.dtos.SourceMessageDTO;
 
 public class SourceMessageMapper {

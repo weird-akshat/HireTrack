@@ -1,4 +1,4 @@
-package com.hiretrack.message_extractor.Service;
+package com.hiretrack.message_extractor.service;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
