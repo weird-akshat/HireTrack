@@ -38,7 +38,7 @@ public class Runner implements CommandLineRunner {
                 .build();
 
         // Test PDF reading
-        String text = pdfReaderService.extractText(message.getFileData());
+        String text = pdfReaderService.extractText(message);
         System.out.println("Extracted text:\n" + text);
 //        sourceMessageRepo.save(message);
         System.out.println("PDF loaded successfully. Size: " + message.getSize() + " bytes");

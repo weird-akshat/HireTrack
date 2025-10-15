@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Service
 public class ImageReaderService {
-    public String extractTextFromImage(SourceMessage sourceMessage){
+    public String extractText(SourceMessage sourceMessage){
         if (sourceMessage.getFileData() == null || sourceMessage.getFileData().length == 0) {
             throw new IllegalArgumentException("SourceMessage contains no file data");
         }

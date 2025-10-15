@@ -9,7 +9,6 @@ import java.util.List;
 @Builder
 
 public class ChunkMessageDTO {
-    private int messageCount;
-    private List<SourceMessageDTO> messages;
 
+    private List<SourceMessageDTO> messages;
 }

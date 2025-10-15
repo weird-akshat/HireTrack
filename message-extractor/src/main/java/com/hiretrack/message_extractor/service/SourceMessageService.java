@@ -1,17 +1,21 @@
 package com.hiretrack.message_extractor.service;
 
+import com.hiretrack.message_extractor.dtos.ChunkMessageDTO;
+import com.hiretrack.message_extractor.dtos.OutputMessage;
 import com.hiretrack.message_extractor.entity.SourceMessage;
 import com.hiretrack.message_extractor.mapper.SourceMessageMapper;
 import com.hiretrack.message_extractor.repo.SourceMessageRepo;
 import com.hiretrack.message_extractor.dtos.SourceMessageDTO;
-import com.hiretrack.message_extractor.repo.SourceMessageRepo;
-import com.hiretrack.message_extractor.service.ExcelReaderService;
-import com.hiretrack.message_extractor.service.ImageReaderService;
-import com.hiretrack.message_extractor.service.PdfReaderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.boot.jaxb.SourceType;
 import org.springframework.stereotype.Service;
 
-//@AllArgsConstructor
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SourceMessageService {
@@ -21,11 +25,48 @@ public class SourceMessageService {
     private final ImageReaderService imageReaderService;
     private final ExcelReaderService excelReaderService;
 
-    public void storeMessage(SourceMessageDTO sourceMessageDTO){
-        SourceMessage sourceMessage= SourceMessageMapper.convertToEntity(sourceMessageDTO);
-        sourceMessageRepo.save(sourceMessage);
+    public List<SourceMessage> storeMessages(ChunkMessageDTO chunkMessageDTO){
+        List<SourceMessage> messages = new ArrayList<>();
+        for (SourceMessageDTO sourceMessageDTO : chunkMessageDTO.getMessages()){
+           SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
+            sourceMessageRepo.save(sourceMessage);
+            messages.add(sourceMessage);
+        }
 
-        return;
+        return messages;
+    }
+    public List<OutputMessage> extractAll(List<SourceMessage> messages){
+        List<OutputMessage> outputMessages = new ArrayList<>();
+        for (SourceMessage sourceMessage : messages){
+            OutputMessage outputMessage = new OutputMessage();
+            outputMessage.setId(sourceMessage.getId());
+            try{
+                if (sourceMessage.getContentType().equalsIgnoreCase("application/pdf")){
+                    outputMessage.setText(pdfReaderService.extractText(sourceMessage));
+                }
+                else if (sourceMessage.getContentType().equalsIgnoreCase("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")){
+                    outputMessage.setText(excelReaderService.extractText(sourceMessage));
+                }
+                else if (
+                        sourceMessage.getContentType().equalsIgnoreCase("image/png") ||
+                                sourceMessage.getContentType().equalsIgnoreCase("image/jpg") ||
+                                sourceMessage.getContentType().equalsIgnoreCase("image/jpeg") ||
+                                sourceMessage.getContentType().equalsIgnoreCase("image/gif") ||
+                                sourceMessage.getContentType().equalsIgnoreCase("image/bmp") ||
+                                sourceMessage.getContentType().equalsIgnoreCase("image/webp")
+                ) {
+                    outputMessage.setText(imageReaderService.extractText(sourceMessage));
+                }
+                else if (sourceMessage.getContentType().equalsIgnoreCase("text/plain")){
+                    outputMessage.setText(new String(sourceMessage.getFileData(), StandardCharsets.UTF_8));
+                }
+            }
+            catch (Exception e){
+                log.error("Error in extracting text");
+            }
+            outputMessages.add(outputMessage);
+        }
+        return outputMessages;
     }
 
 }
