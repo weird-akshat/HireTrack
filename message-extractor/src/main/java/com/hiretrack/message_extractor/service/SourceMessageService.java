@@ -25,25 +25,26 @@ public class SourceMessageService {
     private final PdfReaderService pdfReaderService;
     private final ImageReaderService imageReaderService;
     private final ExcelReaderService excelReaderService;
+    private final PptReaderService pptReaderService;
 
     public List<OutputMessage> saveAndConvertToText(ChunkMessageDTO chunkMessageDTO){
         List<OutputMessage> list= extractAll(storeMessages(chunkMessageDTO));
-        System.out.println(list);
+
         return list;
     }
 
     public List<SourceMessage> storeMessages(ChunkMessageDTO chunkMessageDTO){
         List<SourceMessage> messages = new ArrayList<>();
-        log.info("begin");
+
         for (SourceMessageDTO sourceMessageDTO : chunkMessageDTO.getMessages()){
-            log.info("begin1");
+
            SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
-            log.info("begin2");
+
             sourceMessageRepo.save(sourceMessage);
-            log.info("begin3");
+
             messages.add(sourceMessage);
         }
-        log.info("end");
+
 
         return messages;
     }
@@ -71,6 +72,9 @@ public class SourceMessageService {
                 }
                 else if (sourceMessage.getContentType().equalsIgnoreCase("text/plain")){
                     outputMessage.setText(new String(sourceMessage.getFileData(), StandardCharsets.UTF_8));
+                }
+                else if (sourceMessage.getContentType().equalsIgnoreCase("application/vnd.openxmlformats-officedocument.presentationml.presentation")){
+                    outputMessage.setText(pptReaderService.extractText(sourceMessage));
                 }
             }
             catch (Exception e){
