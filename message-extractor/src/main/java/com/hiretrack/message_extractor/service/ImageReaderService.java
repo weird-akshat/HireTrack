@@ -1,11 +1,8 @@
 package com.hiretrack.message_extractor.service;
 
 import com.hiretrack.message_extractor.entity.SourceMessage;
-import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import org.springframework.stereotype.Service;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -23,9 +20,11 @@ public class ImageReaderService {
                 throw new IOException("Invalid image data: could not decode.");
             }
 
-            ITesseract tesseract = new Tesseract();
+            System.setProperty("jna.library.path", "/usr/local/lib");
+            Tesseract tesseract = new Tesseract();
             tesseract.setDatapath("/usr/share/tesseract/tessdata");
             tesseract.setLanguage("eng");
+
             return tesseract.doOCR(bufferedImage);
 
         } catch (Exception e) {
