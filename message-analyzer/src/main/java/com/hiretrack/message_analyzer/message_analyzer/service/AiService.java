@@ -1,6 +1,6 @@
 package com.hiretrack.message_analyzer.message_analyzer.service;
 
-import com.hiretrack.message_analyzer.message_analyzer.dto.JobListing;
+import com.hiretrack.message_analyzer.message_analyzer.dto.AiResponse;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +13,11 @@ public class AiService {
     }
 
     public void getStructuredMessage(String text){
-        JobListing jobListing = chatClient.prompt(text).call().entity(JobListing.class);
+        AiResponse aiResponse = chatClient.prompt(text).user(u->u.text("Generate only the relevant structure based on the message, also create the notification for the same. For branches, have only the abbreviations with no spaces, no btech needed. ")).call().entity(AiResponse.class);
 
-        System.out.println(jobListing);
+        System.out.println(aiResponse.getJobListing());
+
+
     }
 
 
