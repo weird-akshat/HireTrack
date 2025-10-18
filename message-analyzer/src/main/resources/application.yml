@@ -1,4 +1,8 @@
 spring:
+  ai:
+    mistralai:
+      api-key: ${MISTRALAI_API_KEY}
+
   application:
     name: message-analyzer
 server:
