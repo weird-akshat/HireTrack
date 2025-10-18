@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Data
 public class JobListing {
-
+    private long sourceId;
     private String companyName;
     private String offerType;
     private String category;

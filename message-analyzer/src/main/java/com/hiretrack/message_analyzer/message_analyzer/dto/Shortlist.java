@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Shortlist {
+    private long sourceId;
     private String companyName;
     private String jobRole;
     List<Map<String,String>> studentDetails;
