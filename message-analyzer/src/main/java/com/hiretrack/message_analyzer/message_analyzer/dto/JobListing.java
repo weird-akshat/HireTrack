@@ -3,6 +3,7 @@ package com.hiretrack.message_analyzer.message_analyzer.dto;
 import lombok.Data;
 
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -23,7 +24,7 @@ public class JobListing {
     private int percentage10th;
     private int percentage12th;
     private int percentageDiploma;
-    private OffsetDateTime deadline;
+    private LocalDateTime deadline;
     private List<String> eligibleBranches;
     private List<String> eligibilityCriteria;
     private List<String> workLocation;
