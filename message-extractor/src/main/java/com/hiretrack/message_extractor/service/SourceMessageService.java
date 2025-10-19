@@ -1,5 +1,6 @@
 package com.hiretrack.message_extractor.service;
 
+import com.hiretrack.message_extractor.client.MessageExtractorClient;
 import com.hiretrack.message_extractor.dtos.ChunkMessageDTO;
 import com.hiretrack.message_extractor.dtos.OutputMessage;
 import com.hiretrack.message_extractor.entity.SourceMessage;
@@ -26,10 +27,12 @@ public class SourceMessageService {
     private final ImageReaderService imageReaderService;
     private final ExcelReaderService excelReaderService;
     private final PptReaderService pptReaderService;
+    private final MessageExtractorClient messageExtractorClient;
 
     public List<OutputMessage> saveAndConvertToText(ChunkMessageDTO chunkMessageDTO){
         List<OutputMessage> list= extractAll(storeMessages(chunkMessageDTO));
 
+        messageExtractorClient.analyzeMessage(list);
         return list;
     }
 
