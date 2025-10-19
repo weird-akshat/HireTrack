@@ -3,6 +3,8 @@ package com.hiretrack.entity_manager.mapper;
 import com.hiretrack.entity_manager.dto.JobListingDto;
 import com.hiretrack.entity_manager.entity.JobListing;
 
+import java.time.LocalDateTime;
+
 public class JobListingMapper {
     public static JobListing toEntity(JobListingDto jobListingDto){
         if (jobListingDto == null)
@@ -13,6 +15,7 @@ public class JobListingMapper {
                 .sourceId(jobListingDto.getSourceId())
                 .events(jobListingDto.getEvents())
                 .minCGPA(jobListingDto.getMinCGPA())
+                .createdAt(LocalDateTime.now())
                 .percentageDiploma(jobListingDto.getPercentageDiploma())
                 .percentage10th(jobListingDto.getPercentage10th())
                 .percentage12th(jobListingDto.getPercentage12th())

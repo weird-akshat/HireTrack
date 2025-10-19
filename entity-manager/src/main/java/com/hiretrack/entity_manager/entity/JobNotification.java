@@ -1,9 +1,6 @@
 package com.hiretrack.entity_manager.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,8 +10,13 @@ import lombok.Data;
 public class JobNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+
     private long id;
     private long sourceId;
+    @Column(columnDefinition = "TEXT")
+
     public String title;
+    @Column(columnDefinition = "TEXT")
+
     public String body;
 }

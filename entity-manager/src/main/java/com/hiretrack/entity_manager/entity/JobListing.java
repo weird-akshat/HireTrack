@@ -50,6 +50,7 @@ public class JobListing {
     private int percentage12th;
     private int percentageDiploma;
     private LocalDateTime deadline;
+    private LocalDateTime createdAt;
     @ElementCollection
     private List<String> eligibleBranches;
     @ElementCollection
