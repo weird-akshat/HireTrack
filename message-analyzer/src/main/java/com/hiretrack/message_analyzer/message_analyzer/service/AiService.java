@@ -29,8 +29,9 @@ public class AiService {
             System.out.println(shortlist.getStudentDetails());
         }
         if (aiResponse.getResponseType()==JOB_LISTING){
-            entityManagerClient.create(aiResponse.getJobListing());
+            entityManagerClient.createJobListing(aiResponse.getJobListing());
         }
+        entityManagerClient.createNotification(aiResponse.getJobNotification());
 
     }
 
