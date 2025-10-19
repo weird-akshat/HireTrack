@@ -1,11 +1,13 @@
 package com.hiretrack.entity_manager.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@Builder
 @Data
 public class JobListingDto {
     private long sourceId;

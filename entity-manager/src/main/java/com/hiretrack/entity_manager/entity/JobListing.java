@@ -15,6 +15,7 @@ public class JobListing {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private long sourceId;
     private String companyName;
     private String offerType;
     private String category;
