@@ -1,16 +1,20 @@
 package com.hiretrack.message_analyzer.message_analyzer.service;
 
+import com.hiretrack.message_analyzer.message_analyzer.client.EntityManagerClient;
 import com.hiretrack.message_analyzer.message_analyzer.dto.AiResponse;
 import com.hiretrack.message_analyzer.message_analyzer.dto.Shortlist;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
+import static com.hiretrack.message_analyzer.message_analyzer.enums.ResponseType.JOB_LISTING;
+
 @Service
 public class AiService {
     private final ChatClient chatClient;
-
-    public AiService(ChatClient.Builder chatClientBuilder){
+    private final EntityManagerClient entityManagerClient;
+    public AiService(ChatClient.Builder chatClientBuilder, EntityManagerClient entityManagerClient){
         this.chatClient = chatClientBuilder.build();
+        this.entityManagerClient= entityManagerClient;
     }
 
     public void getStructuredMessage(String text){
@@ -24,7 +28,9 @@ public class AiService {
         if (shortlist!=null){
             System.out.println(shortlist.getStudentDetails());
         }
-
+        if (aiResponse.getResponseType()==JOB_LISTING){
+            entityManagerClient.create(aiResponse.getJobListing());
+        }
 
     }
 
