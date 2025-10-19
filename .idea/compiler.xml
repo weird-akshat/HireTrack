@@ -20,7 +20,7 @@
         </processorPath>
         <module name="message-extractor" />
       </profile>
-      <profile name="Annotation profile for message-analyzer" enabled="true">
+      <profile name="Annotation profile for entity-manager" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

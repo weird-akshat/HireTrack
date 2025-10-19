@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+
 public class JobListingService {
     private final JobListingRepo jobListingRepo;
-
+    public JobListingService(JobListingRepo jobListingRepo){
+        this.jobListingRepo= jobListingRepo;
+    }
     public void createJobListing(JobListingDto jobListingDto){
         try{
             JobListing jobListing = JobListingMapper.toEntity(jobListingDto);
