@@ -7,6 +7,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
 import static com.hiretrack.message_analyzer.message_analyzer.enums.ResponseType.JOB_LISTING;
+import static com.hiretrack.message_analyzer.message_analyzer.enums.ResponseType.JOB_UPDATE;
 
 @Service
 public class AiService {
@@ -32,6 +33,11 @@ public class AiService {
         }
         if (aiResponse.getResponseType()==JOB_LISTING){
             entityManagerClient.createJobListing(aiResponse.getJobListing());
+        }
+        if (aiResponse.getResponseType() == JOB_UPDATE){
+            System.out.println("Yooohhhhooo");
+            entityManagerClient.link(aiResponse.getJobUpdate());
+            System.out.println("heyyy");
         }
         entityManagerClient.createNotification(aiResponse.getJobNotification());
 

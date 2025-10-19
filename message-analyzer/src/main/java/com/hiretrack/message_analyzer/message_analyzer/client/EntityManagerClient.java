@@ -2,6 +2,7 @@ package com.hiretrack.message_analyzer.message_analyzer.client;
 
 import com.hiretrack.message_analyzer.message_analyzer.dto.JobListing;
 import com.hiretrack.message_analyzer.message_analyzer.dto.JobNotification;
+import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdate;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -11,4 +12,7 @@ public interface EntityManagerClient {
     void createJobListing(JobListing jobListing);
     @PostMapping("/api/job-notification")
     void createNotification(JobNotification jobNotification);
+
+    @PostMapping("/api/link")
+    void link(JobUpdate jobUpdate);
 }
