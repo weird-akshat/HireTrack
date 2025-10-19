@@ -18,6 +18,8 @@ public class Controller {
     private final AiService aiService;
     @PostMapping
     public ResponseEntity<HttpStatus> analyze(@RequestBody List<InputMessage> list){
+        System.out.println(list.get(0).getSourceId());
+        System.out.println(list);
         try{
             for (InputMessage inputMessage : list){
                 aiService.getStructuredMessage(inputMessage.toString());

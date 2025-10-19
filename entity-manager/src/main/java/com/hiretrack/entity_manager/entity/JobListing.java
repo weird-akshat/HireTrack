@@ -16,33 +16,32 @@ public class JobListing {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long sourceId;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
     private String companyName;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String offerType;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
 
     private String category;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
 
     private String jobProfile;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
 
     private String jobDescription;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
 
     private String stipend;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
 
     private String accommodationAllowance;
-    @Lob
+
     @Column(columnDefinition = "TEXT")
 
     private String onConversionCTC;

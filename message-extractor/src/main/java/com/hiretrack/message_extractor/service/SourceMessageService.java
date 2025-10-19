@@ -44,18 +44,18 @@ public class SourceMessageService {
            SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
 
             sourceMessageRepo.save(sourceMessage);
-
+//            System.out.println(sourceMessage);
             messages.add(sourceMessage);
         }
 
-
+//        System.out.println(messages.get(0));
         return messages;
     }
     public List<OutputMessage> extractAll(List<SourceMessage> messages){
         List<OutputMessage> outputMessages = new ArrayList<>();
         for (SourceMessage sourceMessage : messages){
             OutputMessage outputMessage = new OutputMessage();
-            outputMessage.setId(sourceMessage.getId());
+            outputMessage.setSourceId(sourceMessage.getId());
             try{
                 if (sourceMessage.getContentType().equalsIgnoreCase("application/pdf")){
                     outputMessage.setText(pdfReaderService.extractText(sourceMessage));
@@ -85,6 +85,7 @@ public class SourceMessageService {
             }
             outputMessages.add(outputMessage);
         }
+        System.out.println(outputMessages.get(0).getSourceId());
         return outputMessages;
     }
 

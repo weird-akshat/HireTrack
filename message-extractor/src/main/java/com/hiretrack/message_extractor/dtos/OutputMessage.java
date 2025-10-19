@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class OutputMessage {
-    private Long id;
+    private Long sourceId;
     private String text;
 }
