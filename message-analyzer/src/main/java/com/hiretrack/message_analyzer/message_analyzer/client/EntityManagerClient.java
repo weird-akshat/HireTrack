@@ -6,6 +6,7 @@ import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdate;
 import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdateListing;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @FeignClient(name="ENTITY-MANAGER")
 public interface EntityManagerClient {
@@ -16,4 +17,7 @@ public interface EntityManagerClient {
 
     @PostMapping("/api/link")
     JobUpdateListing link(JobUpdate jobUpdate);
+
+    @PutMapping("/api/job-listing")
+    void updateJob(JobUpdateListing jobUpdateListing);
 }

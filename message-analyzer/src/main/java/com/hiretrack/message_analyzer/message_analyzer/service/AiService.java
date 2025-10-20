@@ -49,8 +49,9 @@ public class AiService {
             newJobUpdateListing.setSourceId(jobUpdateListing.getSourceId());
 //            newJobUpdateListing.setOfferType(jobUpdateListing.getOfferType());
 //            newJobUpdateListing.setCategory(jobUpdateListing.getCategory());
-
             System.out.println(newJobUpdateListing.toString());
+            entityManagerClient.updateJob(newJobUpdateListing);
+
 
         }
         entityManagerClient.createNotification(aiResponse.getJobNotification());

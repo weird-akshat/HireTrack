@@ -28,6 +28,8 @@ public class JobListingService {
     }
     public void updateJobListing(JobUpdateListingDto jobUpdateListingDto){
         try{
+//            JobListing jobListing = jobListingRepo.findById(jobUpdateListingDto.getId()).orElseThrow( ()->new RuntimeException("No job listing"));
+
             JobListing jobListing = JobListingMapper.toEntity(jobUpdateListingDto);
             jobListingRepo.save(jobListing);
         }
