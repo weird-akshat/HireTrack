@@ -1,6 +1,7 @@
 package com.hiretrack.entity_manager.mapper;
 
 import com.hiretrack.entity_manager.dto.JobListingDto;
+import com.hiretrack.entity_manager.dto.JobUpdateListingDto;
 import com.hiretrack.entity_manager.entity.JobListing;
 
 import java.time.LocalDateTime;
@@ -34,11 +35,41 @@ public class JobListingMapper {
                 .build();
 
     }
-    public static JobListingDto toDto(JobListing jobListing){
+    public static JobListing toEntity(JobUpdateListingDto jobListingDto){
+        if (jobListingDto == null)
+            return null;
+        return JobListing.builder()
+                .id(jobListingDto.getId())
+                .jobProfile(jobListingDto.getJobProfile())
+                .jobDescription(jobListingDto.getJobDescription())
+                .sourceId(jobListingDto.getSourceId())
+                .events(jobListingDto.getEvents())
+                .minCGPA(jobListingDto.getMinCGPA())
+                .createdAt(LocalDateTime.now())
+                .percentageDiploma(jobListingDto.getPercentageDiploma())
+                .percentage10th(jobListingDto.getPercentage10th())
+                .percentage12th(jobListingDto.getPercentage12th())
+                .accommodationAllowance(jobListingDto.getAccommodationAllowance())
+                .deadline(jobListingDto.getDeadline())
+                .offerType(jobListingDto.getOfferType())
+                .category(jobListingDto.getCategory())
+                .stipend(jobListingDto.getStipend())
+                .companyName(jobListingDto.getCompanyName())
+                .eligibilityCriteria(jobListingDto.getEligibilityCriteria())
+                .eligibleBranches(jobListingDto.getEligibleBranches())
+                .onConversionCTC(jobListingDto.getOnConversionCTC())
+                .selectionProcess(jobListingDto.getSelectionProcess())
+                .workLocation(jobListingDto.getWorkLocation())
+                .registrationLinks(jobListingDto.getRegistrationLinks())
+                .build();
+
+    }
+    public static JobUpdateListingDto toDto(JobListing jobListing){
         if (jobListing==null){
             return null;
         }
-        return  JobListingDto.builder()
+        return  JobUpdateListingDto.builder()
+                .id(jobListing.getId())
                 .jobProfile(jobListing.getJobProfile())
                 .jobDescription(jobListing.getJobDescription())
                 .sourceId(jobListing.getSourceId())

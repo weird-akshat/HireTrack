@@ -2,6 +2,8 @@ package com.hiretrack.message_analyzer.message_analyzer.service;
 
 import com.hiretrack.message_analyzer.message_analyzer.client.EntityManagerClient;
 import com.hiretrack.message_analyzer.message_analyzer.dto.AiResponse;
+import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdate;
+import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdateListing;
 import com.hiretrack.message_analyzer.message_analyzer.dto.Shortlist;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
@@ -35,9 +37,21 @@ public class AiService {
             entityManagerClient.createJobListing(aiResponse.getJobListing());
         }
         if (aiResponse.getResponseType() == JOB_UPDATE){
-            System.out.println("Yooohhhhooo");
-            entityManagerClient.link(aiResponse.getJobUpdate());
-            System.out.println("heyyy");
+
+            JobUpdateListing jobUpdateListing= entityManagerClient.link(aiResponse.getJobUpdate());
+
+            System.out.println("Returned this brotherr");
+            System.out.println(jobUpdateListing.toString());
+            String updatePrompt = "Given this job Listing object, update the fields according to the new update that has been given.";
+            JobUpdateListing newJobUpdateListing= chatClient.prompt(jobUpdateListing.toString()+text).user(u->u.text(prompt)).call().entity(JobUpdateListing.class);
+            newJobUpdateListing.setId(jobUpdateListing.getId());
+            newJobUpdateListing.setCompanyName(jobUpdateListing.getCompanyName());
+            newJobUpdateListing.setSourceId(jobUpdateListing.getSourceId());
+//            newJobUpdateListing.setOfferType(jobUpdateListing.getOfferType());
+//            newJobUpdateListing.setCategory(jobUpdateListing.getCategory());
+
+            System.out.println(newJobUpdateListing.toString());
+
         }
         entityManagerClient.createNotification(aiResponse.getJobNotification());
 

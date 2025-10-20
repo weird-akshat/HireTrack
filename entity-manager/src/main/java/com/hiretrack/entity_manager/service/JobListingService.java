@@ -1,6 +1,7 @@
 package com.hiretrack.entity_manager.service;
 
 import com.hiretrack.entity_manager.dto.JobListingDto;
+import com.hiretrack.entity_manager.dto.JobUpdateListingDto;
 import com.hiretrack.entity_manager.entity.JobListing;
 import com.hiretrack.entity_manager.mapper.JobListingMapper;
 import com.hiretrack.entity_manager.repo.JobListingRepo;
@@ -24,6 +25,15 @@ public class JobListingService {
             throw new RuntimeException("Error in creating jobListing");
         }
 
+    }
+    public void updateJobListing(JobUpdateListingDto jobUpdateListingDto){
+        try{
+            JobListing jobListing = JobListingMapper.toEntity(jobUpdateListingDto);
+            jobListingRepo.save(jobListing);
+        }
+        catch (Exception e){
+            throw new RuntimeException( "error in updating job listing");
+        }
     }
 
 }
