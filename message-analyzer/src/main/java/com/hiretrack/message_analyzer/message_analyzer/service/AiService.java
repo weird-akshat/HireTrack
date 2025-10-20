@@ -21,7 +21,7 @@ public class AiService {
     }
 
     public void getStructuredMessage(String text){
-        String prompt = "Extract only the relevant fields from the message. Normalize company names to their standard form (remove suffixes like 'OT', 'Inc.', etc.). For branches, use abbreviations with no spaces and exclude 'BTech'. For any time, omit timezone; use LocalDateTime. Create a short, precise notification. Include detailed info only if the object type is 'notification'. Set response type to the most appropriate enum. leave field null if unknown. Return minimal structure only; Any update regarding changes for a job listing should be classified as jobupdate for eg the online test (OT) postponoement, Interview postponement, new details regarding an exisiting opportunity .";
+        String prompt = "Extract relevant fields; normalize company names (remove suffixes like 'OT','Inc.'); abbreviate branches (no spaces, exclude 'BTech'); parse all dates into LocalDateTime (no timezone), even from natural language; always create a notification object with concise message (detailed only if objectType='notification'); select proper enum; leave unknowns null; classify job listing changes (OT/interview postponement, new details) as 'jobupdate'; always ensure JSON is properly closed and minimal; if a jobUpdate exists, still include a notification; responseType should be NOTIFICATION only if no other object apart from notification is being created";
 
         AiResponse aiResponse = chatClient.prompt(text).user(u->u.text(prompt)).call().entity(AiResponse.class);
 
