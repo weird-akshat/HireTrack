@@ -56,10 +56,7 @@ public class SourceMessageService {
         for (SourceMessage sourceMessage : messages){
             OutputMessage outputMessage = new OutputMessage();
 
-            if (sourceMessage.getCaption()!=null){
-                outputMessage.appendText("caption: "+sourceMessage.getCaption());
 
-            }
 
             outputMessage.setSourceId(sourceMessage.getId());
             try{
@@ -84,6 +81,10 @@ public class SourceMessageService {
                 }
                 else if (sourceMessage.getContentType().equalsIgnoreCase("application/vnd.openxmlformats-officedocument.presentationml.presentation")){
                     outputMessage.setText(pptReaderService.extractText(sourceMessage));
+                }
+                if (sourceMessage.getCaption()!=null){
+                    outputMessage.appendText("caption: "+sourceMessage.getCaption());
+
                 }
             }
             catch (Exception e){

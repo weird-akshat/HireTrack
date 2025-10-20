@@ -17,7 +17,10 @@ public class SourceMessage {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+    @Column(columnDefinition = "TEXT")
+
     private String caption;
+    @Column(columnDefinition = "TEXT")
     private String contentType;
     private long size;
     private LocalDateTime timeStamp;
