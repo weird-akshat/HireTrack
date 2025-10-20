@@ -9,5 +9,6 @@ public class Shortlist {
     private long sourceId;
     private String companyName;
     private String jobRole;
+    private int shortlistRound;
     List<Student> studentDetails;
 }

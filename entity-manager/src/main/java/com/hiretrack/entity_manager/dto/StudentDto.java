@@ -1,9 +1,9 @@
-package com.hiretrack.message_analyzer.message_analyzer.dto;
+package com.hiretrack.entity_manager.dto;
 
 import lombok.Data;
 
 @Data
-public class Student {
+public class StudentDto {
     String firstName;
     String lastName;
     String email;

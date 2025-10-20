@@ -8,6 +8,7 @@ import java.util.Map;
 public class ShortlistDto {
     private long sourceId;
     private String companyName;
+    private int shortlistRound;
     private String jobRole;
-    List<Map<String, String>> studentDetails;
+    private List<StudentDto> studentDetails;
 }
