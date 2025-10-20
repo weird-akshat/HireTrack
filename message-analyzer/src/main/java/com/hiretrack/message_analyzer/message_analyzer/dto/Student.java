@@ -1,11 +1,7 @@
-//package com.hiretrack.message_analyzer.message_analyzer.dto;
-//
-//import lombok.Data;
-//
-//@Data
-//public class Student {
-//    private String name;
-//    private String email;
-//    private  String branch;
-//    private String registrationNumber;
-//}
+package com.hiretrack.message_analyzer.message_analyzer.dto;
+
+public class Student {
+    String firstName;
+    String lastName;
+    String email;
+}
