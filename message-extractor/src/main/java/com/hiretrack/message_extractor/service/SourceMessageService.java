@@ -42,9 +42,9 @@ public class SourceMessageService {
         for (SourceMessageDTO sourceMessageDTO : chunkMessageDTO.getMessages()){
 
            SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
-
+            System.out.println(sourceMessage.toString());
             sourceMessageRepo.save(sourceMessage);
-//            System.out.println(sourceMessage);
+            System.out.println("heyyy");
             messages.add(sourceMessage);
         }
 
@@ -55,6 +55,12 @@ public class SourceMessageService {
         List<OutputMessage> outputMessages = new ArrayList<>();
         for (SourceMessage sourceMessage : messages){
             OutputMessage outputMessage = new OutputMessage();
+
+            if (sourceMessage.getCaption()!=null){
+                outputMessage.appendText("caption: "+sourceMessage.getCaption());
+
+            }
+
             outputMessage.setSourceId(sourceMessage.getId());
             try{
                 if (sourceMessage.getContentType().equalsIgnoreCase("application/pdf")){

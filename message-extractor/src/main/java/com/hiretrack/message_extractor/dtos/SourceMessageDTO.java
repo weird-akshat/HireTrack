@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class SourceMessageDTO {
+    private String caption;
     private String contentType;
     private long size;
     private LocalDateTime timeStamp;

@@ -21,6 +21,8 @@ public class MessageController {
     @PostMapping
     public ResponseEntity<List<OutputMessage>> addSourceMessages(@RequestBody ChunkMessageDTO chunkMessageDTO){
         try{
+
+            System.out.println(chunkMessageDTO.toString());
             return new ResponseEntity<>(sourceMessageService.saveAndConvertToText(chunkMessageDTO),HttpStatus.CREATED);
 
         }
