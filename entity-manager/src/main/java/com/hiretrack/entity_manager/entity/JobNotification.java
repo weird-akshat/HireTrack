@@ -13,6 +13,8 @@ public class JobNotification {
 
     private long id;
     private long sourceId;
+
+    private long jobListingId;
     @Column(columnDefinition = "TEXT")
 
     public String title;

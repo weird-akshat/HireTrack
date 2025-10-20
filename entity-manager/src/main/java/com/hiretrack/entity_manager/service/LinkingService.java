@@ -1,5 +1,6 @@
 package com.hiretrack.entity_manager.service;
 
+import com.hiretrack.entity_manager.dto.JobNotificationDto;
 import com.hiretrack.entity_manager.dto.JobUpdateDto;
 import com.hiretrack.entity_manager.dto.JobUpdateListingDto;
 import com.hiretrack.entity_manager.entity.JobListing;
@@ -18,24 +19,31 @@ public class LinkingService {
     private final JobListingRepo jobListingRepo;
     public JobUpdateListingDto findJobListing(JobUpdateDto jobUpdateDto){
 
-        List<JobListing> jobListings = jobListingRepo.findByCompanyNameContaining(jobUpdateDto.getCompanyName());
-        if (jobListings.size()==1){
-            System.out.println(jobListings.get(0));
-            return JobListingMapper.toDto(jobListings.get(0));
+       return JobListingMapper.toDto(findJobListing(jobUpdateDto.getCompanyName(),jobUpdateDto.getJobRole()));
+    }
+    public JobListing findJobListing(JobNotificationDto jobNotificationDto){
+        return findJobListing(jobNotificationDto.getCompanyName(),jobNotificationDto.getJobRole());
+    }
+    public JobListing findJobListing(String companyName, String jobRole){
+        List<JobListing> jobListings = jobListingRepo.findByCompanyNameContaining(companyName);
+        if (jobListings.isEmpty()){
+            return null;
         }
-        else if (jobUpdateDto.getJobRole()==null){
-            return JobListingMapper.toDto(jobListings.stream().max(Comparator.comparing(jobListing -> jobListing.getCreatedAt())).get());
+        else if (jobListings.size()==1){
+            return (jobListings.get(0));
+        }
+        else if (jobRole==null){
+            return jobListings.stream().max(Comparator.comparing(JobListing::getCreatedAt)).orElseThrow(()->new RuntimeException("If this gets thrown then what the fuck, issue in jobRole in linking service"));
         }
         else{
-            jobListings= jobListings.stream().filter(jobListing -> jobListing.getJobProfile().contains(jobUpdateDto.getJobRole())).collect(Collectors.toList());
+            jobListings= jobListings.stream().filter(jobListing -> jobListing.getJobProfile().contains(jobRole)).collect(Collectors.toList());
             if (jobListings.size()==1){
-                return JobListingMapper.toDto(jobListings.get(0));
+                return (jobListings.get(0));
             }
             else {
-                return JobListingMapper.toDto(jobListings.stream().max(Comparator.comparing(jobListing -> jobListing.getCreatedAt())).get());
+                return (jobListings.stream().max(Comparator.comparing(JobListing::getCreatedAt)).orElseThrow(()-> new RuntimeException("If this gets thrown")));
             }
 
         }
-
     }
 }
