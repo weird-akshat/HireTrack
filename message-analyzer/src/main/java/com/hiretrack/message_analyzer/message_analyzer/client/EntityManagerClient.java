@@ -1,9 +1,6 @@
 package com.hiretrack.message_analyzer.message_analyzer.client;
 
-import com.hiretrack.message_analyzer.message_analyzer.dto.JobListing;
-import com.hiretrack.message_analyzer.message_analyzer.dto.JobNotification;
-import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdate;
-import com.hiretrack.message_analyzer.message_analyzer.dto.JobUpdateListing;
+import com.hiretrack.message_analyzer.message_analyzer.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,4 +17,7 @@ public interface EntityManagerClient {
 
     @PutMapping("/api/job-listing")
     void updateJob(JobUpdateListing jobUpdateListing);
+
+    @PostMapping("/api/shortlist")
+    void createShortlist(Shortlist shortlist);
 }

@@ -8,8 +8,7 @@ import com.hiretrack.message_analyzer.message_analyzer.dto.Shortlist;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
-import static com.hiretrack.message_analyzer.message_analyzer.enums.ResponseType.JOB_LISTING;
-import static com.hiretrack.message_analyzer.message_analyzer.enums.ResponseType.JOB_UPDATE;
+import static com.hiretrack.message_analyzer.message_analyzer.enums.ResponseType.*;
 
 @Service
 public class AiService {
@@ -53,6 +52,11 @@ public class AiService {
             entityManagerClient.updateJob(newJobUpdateListing);
 
 
+        }
+        if (aiResponse.getResponseType()==SHORTLIST){
+
+            entityManagerClient.createShortlist(aiResponse.getShortlist());
+            System.out.println("Yoohoo");
         }
         entityManagerClient.createNotification(aiResponse.getJobNotification());
 

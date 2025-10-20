@@ -17,6 +17,5 @@ public class Shortlist {
     private long sourceId;
     private long jobListingId;
     private int shortlistRound;
-    @ElementCollection
-    private List<StudentDto> list;
+    private List<String> studentDetails;
 }
