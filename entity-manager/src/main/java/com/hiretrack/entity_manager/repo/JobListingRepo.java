@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface JobListingRepo extends JpaRepository<JobListing, Long> {
-    List<JobListing> findByCompanyNameContaining(String companyName);
+    List<JobListing> findByCompanyNameContainingIgnoreCase(String companyName);
 }

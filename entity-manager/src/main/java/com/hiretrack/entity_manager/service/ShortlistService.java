@@ -15,7 +15,7 @@ public class ShortlistService {
     private final LinkingService linkingService;
     public void createShortlist(ShortlistDto shortlistDto){
         JobListing jobListing = linkingService.findJobListing(shortlistDto.getCompanyName(),shortlistDto.getJobRole());
-
+        System.out.println(jobListing.toString());
         Shortlist shortlist = ShortlistMapper.toEntity(shortlistDto,jobListing.getId());
 
         shortlistRepo.save(shortlist);

@@ -21,6 +21,7 @@ public class ShortlistController {
     @PostMapping("/shortlist")
     public ResponseEntity<HttpStatus> createShortlist(@RequestBody ShortlistDto shortlistDto){
         try{
+            System.out.println(shortlistDto.toString());
             shortlistService.createShortlist(shortlistDto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }

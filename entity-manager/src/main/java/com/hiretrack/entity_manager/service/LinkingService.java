@@ -25,7 +25,13 @@ public class LinkingService {
         return findJobListing(jobNotificationDto.getCompanyName(),jobNotificationDto.getJobRole());
     }
     public JobListing findJobListing(String companyName, String jobRole){
-        List<JobListing> jobListings = jobListingRepo.findByCompanyNameContaining(companyName);
+        System.out.println(companyName);
+        String[] possibleNames= companyName.split(" ");
+        System.out.println(possibleNames[0]);
+        companyName= possibleNames[0];
+        List<JobListing> jobListings = jobListingRepo.findByCompanyNameContainingIgnoreCase(companyName);
+
+        System.out.println(jobListings);
         if (jobListings.isEmpty()){
             return null;
         }

@@ -28,10 +28,9 @@ public class AiService {
         System.out.println(aiResponse.getJobListing());
         System.out.println(aiResponse.getJobUpdate());
         System.out.println(aiResponse.getJobNotification());
-        Shortlist shortlist = aiResponse.getShortlist();
-        if (shortlist!=null){
-            System.out.println(shortlist.getStudentDetails());
-        }
+        System.out.println(aiResponse.getShortlist().toString());
+
+
         if (aiResponse.getResponseType()==JOB_LISTING){
             entityManagerClient.createJobListing(aiResponse.getJobListing());
         }
@@ -54,7 +53,6 @@ public class AiService {
 
         }
         if (aiResponse.getResponseType()==SHORTLIST){
-
             entityManagerClient.createShortlist(aiResponse.getShortlist());
             System.out.println("Yoohoo");
         }
