@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 @FeignClient(name="ENTITY-MANAGER")
 public interface EntityManagerClient {
     @PostMapping("/api/job-listing")
-    void createJobListing(JobListing jobListing);
+    ApiResponse createJobListing(JobListing jobListing);
+
     @PostMapping("/api/job-notification")
-    void createNotification(JobNotification jobNotification);
+    ApiResponse createNotification(JobNotification jobNotification);
 
     @PostMapping("/api/link")
     JobUpdateListing link(JobUpdate jobUpdate);
 
     @PutMapping("/api/job-listing")
-    void updateJob(JobUpdateListing jobUpdateListing);
+    ApiResponse updateJob(JobUpdateListing jobUpdateListing);
 
     @PostMapping("/api/shortlist")
-    void createShortlist(Shortlist shortlist);
+    ApiResponse createShortlist(Shortlist shortlist);
 }

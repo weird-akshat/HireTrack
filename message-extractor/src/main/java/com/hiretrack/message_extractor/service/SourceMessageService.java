@@ -1,6 +1,7 @@
 package com.hiretrack.message_extractor.service;
 
 import com.hiretrack.message_extractor.client.MessageExtractorClient;
+import com.hiretrack.message_extractor.dtos.ApiResponse;
 import com.hiretrack.message_extractor.dtos.ChunkMessageDTO;
 import com.hiretrack.message_extractor.dtos.OutputMessage;
 import com.hiretrack.message_extractor.entity.SourceMessage;
@@ -9,10 +10,7 @@ import com.hiretrack.message_extractor.repo.SourceMessageRepo;
 import com.hiretrack.message_extractor.dtos.SourceMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.boot.jaxb.SourceType;
-import org.hibernate.result.Output;
 import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +29,12 @@ public class SourceMessageService {
 
     public List<OutputMessage> saveAndConvertToText(ChunkMessageDTO chunkMessageDTO){
         List<OutputMessage> list= extractAll(storeMessages(chunkMessageDTO));
+        log.info("Texts extracted");
+        log.info("OutputMessages: {}", list.toString());
 
-        messageExtractorClient.analyzeMessage(list);
+        log.info("Sending to message-extractor");
+        ApiResponse response = messageExtractorClient.analyzeMessage(list);
+        log.info("Response: {}", response);
         return list;
     }
 
@@ -40,15 +42,18 @@ public class SourceMessageService {
         List<SourceMessage> messages = new ArrayList<>();
 
         for (SourceMessageDTO sourceMessageDTO : chunkMessageDTO.getMessages()){
+            try {
+                SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
+                sourceMessageRepo.save(sourceMessage);
+                messages.add(sourceMessage);
+            }
+            catch (Exception e){
+                log.error("Error in text extraction");
+                throw new RuntimeException("Error in mapping to text");
+            }
 
-           SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
-            System.out.println(sourceMessage.toString());
-            sourceMessageRepo.save(sourceMessage);
-            System.out.println("heyyy");
-            messages.add(sourceMessage);
         }
-
-//        System.out.println(messages.get(0));
+        log.info("Text extracted from all the messages");
         return messages;
     }
     public List<OutputMessage> extractAll(List<SourceMessage> messages){

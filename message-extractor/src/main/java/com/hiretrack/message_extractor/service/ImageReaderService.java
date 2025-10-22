@@ -19,7 +19,6 @@ public class ImageReaderService {
             if (bufferedImage == null) {
                 throw new IOException("Invalid image data: could not decode.");
             }
-
             System.setProperty("jna.library.path", "/usr/local/lib");
             Tesseract tesseract = new Tesseract();
             tesseract.setDatapath("/usr/share/tesseract/tessdata");

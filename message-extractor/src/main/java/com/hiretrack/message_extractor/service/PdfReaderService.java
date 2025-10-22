@@ -15,7 +15,6 @@ public class PdfReaderService {
     public String extractText(SourceMessage sourceMessage) throws IOException {
         try(PDDocument document= PDDocument.load(new ByteArrayInputStream(sourceMessage.getFileData()))){
             PDFTextStripper pdfTextStripper = new PDFTextStripper();
-
             return pdfTextStripper.getText(document);
         }
     }
