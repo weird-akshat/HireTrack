@@ -10,5 +10,6 @@ public class AiResponse {
     private JobNotification jobNotification;
     private  JobUpdate jobUpdate;
     private Shortlist shortlist;
+    private String originalText;
 
 }

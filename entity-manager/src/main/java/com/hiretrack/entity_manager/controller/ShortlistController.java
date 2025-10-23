@@ -1,5 +1,6 @@
 package com.hiretrack.entity_manager.controller;
 
+import com.hiretrack.entity_manager.dto.ApiResponse;
 import com.hiretrack.entity_manager.dto.ShortlistDto;
 import com.hiretrack.entity_manager.service.ShortlistService;
 import lombok.Data;
@@ -22,13 +23,14 @@ public class ShortlistController {
 
     private final ShortlistService shortlistService;
     @PostMapping("/shortlist")
-    public ResponseEntity<HttpStatus> createShortlist(@RequestBody ShortlistDto shortlistDto){
+    public ResponseEntity<ApiResponse> createShortlist(@RequestBody ShortlistDto shortlistDto){
         try{
             log.info("Request to create shortlist received");
             log.info("ShortlistDto: {}",shortlistDto.toString());
             shortlistService.createShortlist(shortlistDto);
             log.info("Shortlist created successfully");
-            return new ResponseEntity<>(HttpStatus.CREATED);
+
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED, "Shortlist created."),HttpStatus.CREATED);
         }
         catch (Exception e){
             log.info("Error in creating shortlist");
