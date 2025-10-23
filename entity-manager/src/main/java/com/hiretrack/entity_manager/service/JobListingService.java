@@ -21,7 +21,7 @@ public class JobListingService {
         try{
             log.info("Mapping JobListingDto to JobListing");
             JobListing jobListing = JobListingMapper.toEntity(jobListingDto);
-            log.info("Mapped JobListing: "+jobListing.toString());
+            log.info("Mapped JobListing: {}", jobListing.toString());
             log.info("Trying to save JobListing");
             jobListingRepo.save(jobListing);
             log.info("Saved jobListing");
@@ -33,13 +33,17 @@ public class JobListingService {
 
     }
     public void updateJobListing(JobUpdateListingDto jobUpdateListingDto){
-        try{
-//            JobListing jobListing = jobListingRepo.findById(jobUpdateListingDto.getId()).orElseThrow( ()->new RuntimeException("No job listing"));
 
+        try{
+            log.info("Trying to map jobListingDto to jobListing");
             JobListing jobListing = JobListingMapper.toEntity(jobUpdateListingDto);
+            log.info("JobListing created: {}", jobListing.toString());
+            log.info("Saving jobListing");
             jobListingRepo.save(jobListing);
+            log.info("JobListing saved");
         }
         catch (Exception e){
+            log.error("Ayo some error in updateJobListingMethod in service layer.");
             throw new RuntimeException( "error in updating job listing");
         }
     }

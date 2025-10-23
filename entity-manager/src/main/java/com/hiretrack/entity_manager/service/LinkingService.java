@@ -7,6 +7,7 @@ import com.hiretrack.entity_manager.entity.JobListing;
 import com.hiretrack.entity_manager.mapper.JobListingMapper;
 import com.hiretrack.entity_manager.repo.JobListingRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LinkingService {
     private final JobListingRepo jobListingRepo;
@@ -25,15 +27,15 @@ public class LinkingService {
         return findJobListing(jobNotificationDto.getCompanyName(),jobNotificationDto.getJobRole());
     }
     public JobListing findJobListing(String companyName, String jobRole){
-        System.out.println(companyName);
+        log.info("Recieved service request to find the job listing");
         String[] possibleNames= companyName.split(" ");
-        System.out.println(possibleNames[0]);
         companyName= possibleNames[0];
         List<JobListing> jobListings = jobListingRepo.findByCompanyNameContainingIgnoreCase(companyName);
 
-        System.out.println(jobListings);
+
         if (jobListings.isEmpty()){
-            return null;
+            log.error("No job listing found");
+            throw new RuntimeException("No job found");
         }
         else if (jobListings.size()==1){
             return (jobListings.get(0));

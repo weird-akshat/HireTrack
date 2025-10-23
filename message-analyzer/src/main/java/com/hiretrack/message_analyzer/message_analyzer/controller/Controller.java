@@ -22,9 +22,16 @@ public class Controller {
     @PostMapping
     public ResponseEntity<ApiResponse> analyze(@RequestBody List<InputMessage> list){
         log.info("Received request body: {}", list);
-        ApiResponse apiResponse = aiService.analyze(list);
+        try{
+            aiService.analyze(list);
+            ApiResponse apiResponse = new ApiResponse(HttpStatus.CREATED,"Message analyzed and processed");
+            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+        }
+        catch (Exception e){
+            log.error("Error in analyzing messages");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
 
 
     }

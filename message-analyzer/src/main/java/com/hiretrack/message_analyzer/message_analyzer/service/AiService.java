@@ -21,18 +21,17 @@ public class AiService {
         this.chatClient = chatClientBuilder.build();
         this.entityManagerClient= entityManagerClient;
     }
-    public ApiResponse analyze(List<InputMessage> list){
+    public void analyze(List<InputMessage> list){
         try{
             for (InputMessage inputMessage : list){
                 getStructuredMessage(inputMessage.toString());
             }
-            return new ApiResponse(HttpStatus.OK, "Messaged analyzed and created successfully");
         }
         catch (Exception e){
-            return new ApiResponse(HttpStatus.BAD_REQUEST,e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
-    public ApiResponse getStructuredMessage(String text){
+    public void getStructuredMessage(String text){
         String prompt = "Extract relevant fields; normalize company names (remove suffixes like 'OT','Inc.'); abbreviate branches (no spaces, exclude 'BTech'); parse all dates into LocalDateTime (no timezone), even from natural language; always create a notification object with concise message (detailed only if objectType='notification'); select proper enum; leave unknowns null; classify job listing changes (OT/interview postponement, new details) as 'jobupdate'; always ensure JSON is properly closed and minimal; if a jobUpdate exists, still include a notification; responseType should be NOTIFICATION only if no other object apart from notification is being created. If a message begins with caption: xxx.pdf format, classify it as job update and make it a job update object. If a message has registration link given, classify it as joblistig and make it a joblisting object. If it's a Job description, classify it as job update and create a jobupdate object not a joblisting.";
         AiResponse aiResponse;
         try{
@@ -54,7 +53,6 @@ public class AiService {
             ApiResponse response = entityManagerClient.createJobListing(aiResponse.getJobListing());
             log.info("Request completed");
             log.info("Entity Manager response: {}", response.toString());
-//            return new ApiResponse(HttpStatus.CREATED, "Job Listing created successfully");
         }
         if (aiResponse.getResponseType() == JOB_UPDATE){
             log.info("Sending request to entity manager for updating the job.");
@@ -71,19 +69,17 @@ public class AiService {
                 }
                 log.info("JOB UPDATE LISTING CREATED: {}",newJobUpdateListing.toString());
 
-                try{
-                    log.info("Sending the new job update listing to entity manager");
-                    ApiResponse apiResponse = entityManagerClient.updateJob(newJobUpdateListing);
-                    log.info(apiResponse.toString());
-                    return new ApiResponse(HttpStatus.OK, "Job Listing Updated Successfully");
-                }
-                catch (Exception e){
-                    log.error("Error from entity manager");
-                }
+
+                log.info("Sending the new job update listing to entity manager");
+                ApiResponse apiResponse = entityManagerClient.updateJob(newJobUpdateListing);
+                log.info(apiResponse.toString());
+
+
+
 
             }
             catch (Exception e){
-//                return new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+                log.error(e.getMessage());
             }
         }
         if (aiResponse.getResponseType()==SHORTLIST){
@@ -93,24 +89,22 @@ public class AiService {
                 ApiResponse apiResponse = entityManagerClient.createShortlist(aiResponse.getShortlist());
                 log.info("Shortlist created successfully\nResponse from entity manager {}",apiResponse.toString());
 
-//                return new ApiResponse(HttpStatus.CREATED, "Shortlist created successfully");
 
             }
             catch (Exception e){
                 log.error("Error in creating shortlist.");
+                throw new RuntimeException();
             }
-
-
         }
         try{
             log.info("Sending request to entity manager to create notification.");
             ApiResponse apiResponse= entityManagerClient.createNotification(aiResponse.getJobNotification());
             log.info("Created notification successfully. \nEntity manager response: {}", apiResponse.toString());
 
-            return new ApiResponse(HttpStatus.OK, "Created/Updated the required object and its notification.");
         }
         catch (Exception e){
-            return new ApiResponse(HttpStatus.BAD_REQUEST,e.toString());
+            log.info("Issue in creating notification");
+            throw new RuntimeException();
         }
 
 
