@@ -52,6 +52,8 @@ public class JobListing {
     private double minCGPA;
     private int percentage10th;
     private int percentage12th;
+    private LocalDateTime dateOT;
+    private LocalDateTime dateInterview;
     private int percentageDiploma;
     private LocalDateTime deadline;
     private LocalDateTime createdAt;

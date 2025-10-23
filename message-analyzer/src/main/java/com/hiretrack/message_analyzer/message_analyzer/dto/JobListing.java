@@ -21,6 +21,8 @@ public class JobListing {
     private String accommodationAllowance;
     private String onConversionCTC;
     private double minCGPA;
+    private LocalDateTime dateOT;
+    private LocalDateTime dateInterview;
     private int percentage10th;
     private int percentage12th;
     private int percentageDiploma;

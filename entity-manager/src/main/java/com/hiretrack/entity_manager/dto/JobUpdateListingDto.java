@@ -23,6 +23,8 @@ public class JobUpdateListingDto {
     private String stipend;
     private String accommodationAllowance;
     private String onConversionCTC;
+    private LocalDateTime dateOT;
+    private LocalDateTime dateInterview;
     private double minCGPA;
     private int percentage10th;
     private int percentage12th;

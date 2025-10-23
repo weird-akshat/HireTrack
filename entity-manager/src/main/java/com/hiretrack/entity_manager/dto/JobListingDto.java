@@ -23,6 +23,8 @@ public class JobListingDto {
     private int percentage10th;
     private int percentage12th;
     private int percentageDiploma;
+    private LocalDateTime dateOT;
+    private LocalDateTime dateInterview;
     private LocalDateTime deadline;
     private List<String> eligibleBranches;
     private List<String> eligibilityCriteria;
