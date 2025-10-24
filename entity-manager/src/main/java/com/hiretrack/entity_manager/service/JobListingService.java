@@ -22,6 +22,9 @@ public class JobListingService {
             log.info("Mapping JobListingDto to JobListing");
             JobListing jobListing = JobListingMapper.toEntity(jobListingDto);
             log.info("Mapped JobListing: {}", jobListing.toString());
+            //Confirm whether a source message from the same id exists in the database
+            //an api call essentially to message-extractor for boolean to find whether the source message exists
+            //just make a service for this instead
             log.info("Trying to save JobListing");
             jobListingRepo.save(jobListing);
             log.info("Saved jobListing");

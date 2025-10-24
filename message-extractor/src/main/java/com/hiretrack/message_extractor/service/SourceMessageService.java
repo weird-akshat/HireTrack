@@ -1,13 +1,10 @@
 package com.hiretrack.message_extractor.service;
 
 import com.hiretrack.message_extractor.client.MessageExtractorClient;
-import com.hiretrack.message_extractor.dtos.ApiResponse;
-import com.hiretrack.message_extractor.dtos.ChunkMessageDTO;
-import com.hiretrack.message_extractor.dtos.OutputMessage;
+import com.hiretrack.message_extractor.dtos.*;
 import com.hiretrack.message_extractor.entity.SourceMessage;
 import com.hiretrack.message_extractor.mapper.SourceMessageMapper;
 import com.hiretrack.message_extractor.repo.SourceMessageRepo;
-import com.hiretrack.message_extractor.dtos.SourceMessageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -97,8 +94,32 @@ public class SourceMessageService {
             }
             outputMessages.add(outputMessage);
         }
-        System.out.println(outputMessages.get(0).getSourceId());
+
         return outputMessages;
+    }
+    public void deleteMessage(MessageDeletionRequest messageDeletionRequest){
+        //find by time stamp
+        //make an api request to delete messages to message-extractor
+
+        List<SourceMessage>  potentialDeletees = sourceMessageRepo.findByTimeStamp(messageDeletionRequest.getTimestamp());
+
+        if (potentialDeletees.isEmpty()){
+            log.error("Didn't find any job listing to delete");
+        }
+
+
+        for (SourceMessageDTO sourceMessageDto: messageDeletionRequest.getMessageList()){
+            log.info("Finding the particular message to be deleted.");
+            potentialDeletees.removeIf(potentialDeletee -> potentialDeletee.getFileData() == sourceMessageDto.getFileData());
+        }
+        if (potentialDeletees.isEmpty())
+            log.error("Didn't find any job listing to delete");
+        else  {
+            log.info("Found the message to be deleted, sourceId: {}", potentialDeletees.get(0).getId());
+
+            //now make an api call to delete the message in message extractor. 
+        }
+
     }
 
 }
