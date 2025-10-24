@@ -1,5 +1,6 @@
 package com.hiretrack.entity_manager.service;
 
+import com.hiretrack.entity_manager.client.MessageExtractorClient;
 import com.hiretrack.entity_manager.dto.JobNotificationDto;
 import com.hiretrack.entity_manager.entity.JobListing;
 import com.hiretrack.entity_manager.entity.JobNotification;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class JobNotificationService {
     private final JobNotificationRepo jobNotificationRepo;
     private final LinkingService linkingService;
+    private final MessageExtractorClient messageExtractorClient;
 
     public void createNotification(JobNotificationDto jobNotificationDto){
         try{
@@ -34,7 +36,7 @@ public class JobNotificationService {
                 jobNotifcation= JobNotificationMapper.toEntity(jobNotificationDto);
 
             }
-
+            messageExtractorClient.sourceMessageExists(jobNotifcation.getSourceId());
 
             jobNotificationRepo.save(jobNotifcation);
         }

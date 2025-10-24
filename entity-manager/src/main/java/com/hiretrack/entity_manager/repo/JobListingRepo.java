@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface JobListingRepo extends JpaRepository<JobListing, Long> {
     List<JobListing> findByCompanyNameContainingIgnoreCase(String companyName);
+    void deleteBySourceId(Long sourceId);
 }

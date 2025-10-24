@@ -1,5 +1,6 @@
 package com.hiretrack.message_extractor.service;
 
+import com.hiretrack.message_extractor.client.EntityManagerClient;
 import com.hiretrack.message_extractor.client.MessageExtractorClient;
 import com.hiretrack.message_extractor.dtos.*;
 import com.hiretrack.message_extractor.entity.SourceMessage;
@@ -23,6 +24,7 @@ public class SourceMessageService {
     private final ExcelReaderService excelReaderService;
     private final PptReaderService pptReaderService;
     private final MessageExtractorClient messageExtractorClient;
+    private final EntityManagerClient entityManagerClient;
 
     public List<OutputMessage> saveAndConvertToText(ChunkMessageDTO chunkMessageDTO){
         List<OutputMessage> list= extractAll(storeMessages(chunkMessageDTO));
@@ -116,8 +118,17 @@ public class SourceMessageService {
             log.error("Didn't find any job listing to delete");
         else  {
             log.info("Found the message to be deleted, sourceId: {}", potentialDeletees.get(0).getId());
+            try{
+                log.info("Sending request to entity manager to delete the messages");
+                ApiResponse apiResponse = entityManagerClient.deleteMessage(potentialDeletees.get(0).getId());
+                log.info("Deletion request successfully processed");
+            }
+            catch (Exception e){
+                log.error("Issue in deletion from entity manager");
+                throw new RuntimeException("issue in deletion from entity manager");
+            }
 
-            //now make an api call to delete the message in message extractor. 
+            //now make an api call to delete the message in message extractor.
         }
 
     }

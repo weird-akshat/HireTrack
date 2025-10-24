@@ -1,5 +1,6 @@
 package com.hiretrack.entity_manager.service;
 
+import com.hiretrack.entity_manager.client.MessageExtractorClient;
 import com.hiretrack.entity_manager.dto.JobListingDto;
 import com.hiretrack.entity_manager.dto.JobUpdateListingDto;
 import com.hiretrack.entity_manager.entity.JobListing;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class JobListingService {
     private final JobListingRepo jobListingRepo;
-    public JobListingService(JobListingRepo jobListingRepo){
+    private final MessageExtractorClient messageExtractorClient;
+    public JobListingService(JobListingRepo jobListingRepo, MessageExtractorClient messageExtractorClient){
         this.jobListingRepo= jobListingRepo;
+        this.messageExtractorClient = messageExtractorClient;
     }
     public void createJobListing(JobListingDto jobListingDto){
 
@@ -26,6 +29,9 @@ public class JobListingService {
             //an api call essentially to message-extractor for boolean to find whether the source message exists
             //just make a service for this instead
             log.info("Trying to save JobListing");
+
+            log.info("Finding if the sourceId exists");
+            messageExtractorClient.sourceMessageExists(jobListing.getSourceId());
             jobListingRepo.save(jobListing);
             log.info("Saved jobListing");
         }
@@ -42,6 +48,8 @@ public class JobListingService {
             JobListing jobListing = JobListingMapper.toEntity(jobUpdateListingDto);
             log.info("JobListing created: {}", jobListing.toString());
             log.info("Saving jobListing");
+            log.info("Finding if the sourceId exists for the update");
+            messageExtractorClient.sourceMessageExists(jobListing.getSourceId());
             jobListingRepo.save(jobListing);
             log.info("JobListing saved");
         }

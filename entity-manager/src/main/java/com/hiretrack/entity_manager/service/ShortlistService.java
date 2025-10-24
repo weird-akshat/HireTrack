@@ -1,5 +1,6 @@
 package com.hiretrack.entity_manager.service;
 
+import com.hiretrack.entity_manager.client.MessageExtractorClient;
 import com.hiretrack.entity_manager.dto.ShortlistDto;
 import com.hiretrack.entity_manager.entity.JobListing;
 import com.hiretrack.entity_manager.entity.Shortlist;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class ShortlistService {
     private final ShortlistRepo shortlistRepo;
     private final LinkingService linkingService;
+    private final MessageExtractorClient messageExtractorClient;
     public void createShortlist(ShortlistDto shortlistDto){
         try{
             log.info("Finding joblisting for the shortlist");
@@ -23,6 +25,7 @@ public class ShortlistService {
             Shortlist shortlist = ShortlistMapper.toEntity(shortlistDto,jobListing.getId());
             log.info("Shortlist mapped");
             log.info("Saving shortlist");
+            messageExtractorClient.sourceMessageExists(shortlist.getSourceId());
             shortlistRepo.save(shortlist);
             log.info("Shortlist saved");
 
