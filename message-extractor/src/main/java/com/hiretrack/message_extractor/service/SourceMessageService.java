@@ -9,6 +9,8 @@ import com.hiretrack.message_extractor.repo.SourceMessageRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +47,8 @@ public class SourceMessageService {
         for (SourceMessageDTO sourceMessageDTO : chunkMessageDTO.getMessages()){
             try {
                 SourceMessage sourceMessage =  SourceMessageMapper.convertToEntity(sourceMessageDTO);
+                log.info("Source Message: {}", sourceMessage.toString());
+
                 sourceMessageRepo.save(sourceMessage);
                 messages.add(sourceMessage);
             }
@@ -101,12 +105,19 @@ public class SourceMessageService {
 
         return outputMessages;
     }
+    @Transactional(readOnly = true)
     public void deleteMessage(MessageDeletionRequest messageDeletionRequest){
         //find by time stamp
         //make an api request to delete messages to message-extractor
         log.info("Searching the database for the potential source messages for the timestamp: {}",LocalDateTime.parse(messageDeletionRequest.getTimestamp().toString().replace("Z", "").split("\\.")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+        List<SourceMessage>  potentialDeletees=new ArrayList<>();
+        try{
+             potentialDeletees = sourceMessageRepo.findByTimeStamp(LocalDateTime.parse(messageDeletionRequest.getTimestamp().toString().replace("Z", "").split("\\.")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
 
-        List<SourceMessage>  potentialDeletees = sourceMessageRepo.findByTimeStamp(LocalDateTime.parse(messageDeletionRequest.getTimestamp().toString().replace("Z", "").split("\\.")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+        }
+        catch (Exception e){
+            log.error("Exception: {}\nMessage: {}",e,e.getMessage());
+        }
         log.info("Database fetch complete");
 
         if (potentialDeletees.isEmpty()){

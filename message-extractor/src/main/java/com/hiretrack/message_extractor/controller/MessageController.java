@@ -23,6 +23,8 @@ public class MessageController {
     private final SourceMessageService sourceMessageService;
     @PostMapping
     public ResponseEntity<List<OutputMessage>> addSourceMessages(@RequestBody ChunkMessageDTO chunkMessageDTO){
+
+        log.info("Request received: {}",chunkMessageDTO.toString());
         try{
             log.info("Entered message controller.");
             log.info("Request Body:: {}", chunkMessageDTO.toString());
