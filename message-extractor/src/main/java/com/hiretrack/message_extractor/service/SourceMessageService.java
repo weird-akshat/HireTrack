@@ -105,7 +105,7 @@ public class SourceMessageService {
 
         return outputMessages;
     }
-    @Transactional(readOnly = true)
+    @Transactional
     public void deleteMessage(MessageDeletionRequest messageDeletionRequest){
         //find by time stamp
         //make an api request to delete messages to message-extractor
@@ -135,6 +135,7 @@ public class SourceMessageService {
         }
         else  {
             log.info("Found the message to be deleted, sourceId: {}", potentialDeletees.get(0).getId());
+            sourceMessageRepo.deleteById(potentialDeletees.get(0).getId());
             try{
                 log.info("Sending request to entity manager to delete the messages");
                 ApiResponse apiResponse = entityManagerClient.deleteMessage(potentialDeletees.get(0).getId());
