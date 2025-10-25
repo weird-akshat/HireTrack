@@ -22,7 +22,7 @@ public class AiService {
         try{
             List<AiResponse> aiResponses= new ArrayList<>();
             for (InputMessage inputMessage : list){
-                AiResponse aiResponse = getStructuredMessage(inputMessage.toString());
+                AiResponse aiResponse = getStructuredMessage(inputMessage);
                 aiResponse.setOriginalText(inputMessage.toString());
                 aiResponses.add(aiResponse);
             }
@@ -85,13 +85,23 @@ public class AiService {
             }
         }
     }
-    public AiResponse getStructuredMessage(String text){
-        String prompt = "Extract relevant fields; normalize company names (remove suffixes like 'OT','Inc.'); abbreviate branches (no spaces, exclude 'BTech'); parse all dates into LocalDateTime (no timezone), even from natural language; always create a notification object with concise message (detailed only if objectType='notification'); select proper enum; leave unknowns null; classify job listing changes (OT/interview postponement, new details) as 'jobupdate'; always ensure JSON is properly closed and minimal; if a jobUpdate exists, still include a notification; responseType should be NOTIFICATION only if no other object apart from notification is being created. If a message begins with caption: xxx.pdf format, classify it as job update and make it a job update object. If a message has registration link given, classify it as joblistig and make it a joblisting object. If it's a Job description, classify it as job update and create a jobupdate object not a joblisting. Set original text as empty string.DO NOT WRAP THE JSON IN MARKDOWN CODE FENCES (e.g., ```json or ```).";
+    public AiResponse getStructuredMessage(InputMessage inputMessage){
+        String text= inputMessage.getText();
+        String prompt = "Extract relevant fields; normalize company names (remove suffixes like 'OT','Inc.'); abbreviate branches (no spaces, exclude 'BTech'); parse all dates into LocalDateTime (no timezone), even from natural language; always create a notification object with concise message (detailed only if objectType='notification'); select proper enum; leave unknowns null; classify job listing changes (OT/interview postponement, new details) as 'jobupdate'; always ensure JSON is properly closed and minimal; if a jobUpdate exists, still include a notification; responseType should be NOTIFICATION only if no other object apart from notification is being created. If a message begins with caption: xxx.pdf format, classify it as job update and make it a job update object. If a message has registration link given, classify it as joblistig and make it a joblisting object. If it's a Job description, classify it as job update and create a jobupdate object not a joblisting. Keep the job role an empty string if no job role is found. Set original text as empty string.DO NOT WRAP THE JSON IN MARKDOWN CODE FENCES (e.g., ```json or ```).";
         AiResponse aiResponse;
         try{
             aiResponse = chatClient.prompt(text).user(u->u.text(prompt)).call().entity(AiResponse.class);
             if (aiResponse==null){
                 throw new RuntimeException("AI response Null");
+            }
+            if (aiResponse.getJobListing()!=null){
+                aiResponse.getJobListing().setSourceId(inputMessage.getSourceId());
+            }
+            if (aiResponse.getShortlist()!=null){
+                aiResponse.getShortlist().setSourceId(inputMessage.getSourceId());
+            }
+            if (aiResponse.getJobNotification()!=null){
+                aiResponse.getJobNotification().setSourceId(inputMessage.getSourceId());
             }
             log.info("Response returned from LLM: {}", aiResponse.toString());
             return aiResponse;

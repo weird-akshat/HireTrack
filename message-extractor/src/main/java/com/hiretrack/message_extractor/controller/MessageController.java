@@ -36,6 +36,8 @@ public class MessageController {
 
     @DeleteMapping()
     public ResponseEntity<ApiResponse> deleteMessage(@RequestBody MessageDeletionRequest messageDeletionRequest){
+
+        log.info("Received request to delete message: {}",messageDeletionRequest.toString());
         try{
             log.info("Received request to delete message: {}", messageDeletionRequest.toString());
             sourceMessageService.deleteMessage(messageDeletionRequest);

@@ -40,11 +40,12 @@ public class LinkingService {
         else if (jobListings.size()==1){
             return (jobListings.get(0));
         }
-        else if (jobRole==null){
+        else if (jobRole.equalsIgnoreCase("")){
             return jobListings.stream().max(Comparator.comparing(JobListing::getCreatedAt)).orElseThrow(()->new RuntimeException("If this gets thrown then what the fuck, issue in jobRole in linking service"));
         }
         else{
             jobListings= jobListings.stream().filter(jobListing -> jobListing.getJobProfile().contains(jobRole)).collect(Collectors.toList());
+
             if (jobListings.size()==1){
                 return (jobListings.get(0));
             }

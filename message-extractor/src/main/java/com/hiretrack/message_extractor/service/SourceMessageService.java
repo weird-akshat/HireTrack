@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,20 +104,24 @@ public class SourceMessageService {
     public void deleteMessage(MessageDeletionRequest messageDeletionRequest){
         //find by time stamp
         //make an api request to delete messages to message-extractor
+        log.info("Searching the database for the potential source messages for the timestamp: {}",LocalDateTime.parse(messageDeletionRequest.getTimestamp().toString().replace("Z", "").split("\\.")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
 
-        List<SourceMessage>  potentialDeletees = sourceMessageRepo.findByTimeStamp(messageDeletionRequest.getTimestamp());
+        List<SourceMessage>  potentialDeletees = sourceMessageRepo.findByTimeStamp(LocalDateTime.parse(messageDeletionRequest.getTimestamp().toString().replace("Z", "").split("\\.")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+        log.info("Database fetch complete");
 
         if (potentialDeletees.isEmpty()){
             log.error("Didn't find any job listing to delete");
         }
-
+        log.info("Potential messages to be deleted: {}",potentialDeletees.toString());
 
         for (SourceMessageDTO sourceMessageDto: messageDeletionRequest.getMessageList()){
             log.info("Finding the particular message to be deleted.");
             potentialDeletees.removeIf(potentialDeletee -> potentialDeletee.getFileData() == sourceMessageDto.getFileData());
         }
-        if (potentialDeletees.isEmpty())
+        if (potentialDeletees.isEmpty()){
             log.error("Didn't find any job listing to delete");
+            throw new RuntimeException("Message not found");
+        }
         else  {
             log.info("Found the message to be deleted, sourceId: {}", potentialDeletees.get(0).getId());
             try{
