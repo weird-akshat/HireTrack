@@ -10,15 +10,25 @@
         <module name="eurekaserver" />
         <module name="messageAnalyzer" />
       </profile>
-      <profile name="Annotation profile for entity-manager" enabled="true">
+      <profile name="Annotation profile for job-management" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
+        </processorPath>
+        <module name="job-management" />
+      </profile>
+      <profile name="Annotation profile for message-extractor" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
         </processorPath>
-        <module name="entity-manager" />
         <module name="message-extractor" />
+        <module name="entity-manager" />
         <module name="message-analyzer" />
       </profile>
     </annotationProcessing>
@@ -30,6 +40,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="entity-manager" options="-parameters" />
       <module name="eurekaserver" options="-parameters" />
+      <module name="job-management" options="-parameters" />
       <module name="message-analyzer" options="-parameters" />
       <module name="message-extractor" options="-parameters" />
       <module name="messageAnalyzer" options="-parameters" />

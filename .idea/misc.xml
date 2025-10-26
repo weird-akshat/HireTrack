@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/message-extractor/pom.xml" />
         <option value="$PROJECT_DIR$/message-analyzer/pom.xml" />
         <option value="$PROJECT_DIR$/entity-manager/pom.xml" />
+        <option value="$PROJECT_DIR$/job-management/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

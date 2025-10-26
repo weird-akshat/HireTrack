@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/entity-manager/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eurekaserver/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/job-management/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/message-analyzer/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/message-extractor/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/messageAnalyzer/src/main/java" charset="UTF-8" />
