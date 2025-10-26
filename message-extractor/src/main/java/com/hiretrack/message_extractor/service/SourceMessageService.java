@@ -83,7 +83,7 @@ public class SourceMessageService {
 
 
         log.info("Saving the edited message");
-     
+
         sourceMessageRepo.save(sourceMessage);
 
         log.info("Edited message saved");
