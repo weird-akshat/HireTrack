@@ -2,7 +2,6 @@ package com.hiretrack.job_management.service;
 
 import com.hiretrack.job_management.entity.AppUser;
 import com.hiretrack.job_management.repo.AppUserRepo;
-import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @Service
