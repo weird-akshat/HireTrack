@@ -25,5 +25,7 @@ public class AppUser {
     private String fullName;
     private String password;
     private String role;
+    private Branch branch;
+    private double cgpa;
 
 }

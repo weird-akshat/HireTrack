@@ -38,6 +38,20 @@ public class JobController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
        }
     }
+    @GetMapping("/eligible")
+    public ResponseEntity<List<JobListingDto>> eligibleJobListings(){
+        try {
+            log.info("Got request to get user elibible job listings");
+            List<JobListingDto> jobListings= jobManagementService.getUserJobListing();
+            return new ResponseEntity<>(jobListings,HttpStatus.OK);
+        }
+        catch (Exception e){
+            log.error("Issue in getting job listings");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     @GetMapping("/notification")
     public ResponseEntity<List<JobNotificationDto>> getJobNotifications(){
         try {

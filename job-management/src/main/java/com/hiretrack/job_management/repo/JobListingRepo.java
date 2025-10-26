@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface JobListingRepo extends JpaRepository<JobListing, Long> {
     List<JobListing> findByCompanyNameContainingIgnoreCase(String companyName);
-
+    List<JobListing> findByMinCGPALessThanAndEligibleBranchesContaining(double cgpa, String branch);
 }
