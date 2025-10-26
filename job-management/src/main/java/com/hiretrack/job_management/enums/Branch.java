@@ -1,6 +1,6 @@
 package com.hiretrack.job_management.enums;
 
-public enum branch {
+public enum Branch {
     CS,
     CC,
     IT,
