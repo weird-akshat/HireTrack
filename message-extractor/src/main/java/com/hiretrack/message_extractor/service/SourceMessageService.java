@@ -29,6 +29,7 @@ public class SourceMessageService {
     private final PptReaderService pptReaderService;
     private final MessageExtractorClient messageExtractorClient;
     private final EntityManagerClient entityManagerClient;
+    private final DeleteMessageService deleteMessageService;
 
     public List<OutputMessage> saveAndConvertToText(ChunkMessageDTO chunkMessageDTO){
         List<OutputMessage> list= extractAll(storeMessages(chunkMessageDTO));
@@ -61,6 +62,49 @@ public class SourceMessageService {
         log.info("Text extracted from all the messages");
         return messages;
     }
+    @Transactional
+    public void edit(MessageEditRequest messageEditRequest){
+        //find the original message by caption
+
+        log.info("Finding original message");
+        List<SourceMessage> sourceMessages = sourceMessageRepo.findByCaption(messageEditRequest.getOriginalText());
+        log.info("Sending message deletion request");
+        entityManagerClient.deleteMessage(sourceMessages.get(0).getId());
+        log.info("Message deletion request completed");
+        log.info("Original message found: {}", sourceMessages.get(0));
+        SourceMessage sourceMessage = sourceMessages.get(0);
+//                .id(sourceMessages.get(0).getId())
+                sourceMessage.setCaption(messageEditRequest.getEditedText());
+                sourceMessage.setSize(sourceMessages.get(0).getSize());
+                sourceMessage.setFileData(sourceMessages.get(0).getFileData());
+                sourceMessage.setContentType(sourceMessages.get(0).getContentType());
+                sourceMessage.setTimeStamp(sourceMessages.get(0).getTimeStamp());
+        log.info("Source Message: {}",sourceMessage.toString());
+
+
+        log.info("Saving the edited message");
+     
+        sourceMessageRepo.save(sourceMessage);
+
+        log.info("Edited message saved");
+        log.info("Extracting text from the new edited message");
+
+        List<SourceMessage> message= new ArrayList<>();
+        message.add(sourceMessage);
+        List<OutputMessage> list = extractAll(message);
+        list.get(0).setSourceId(sourceMessage.getId());
+        log.info("Message being sent now bruh is :{} ", list);
+        log.info("Sending request to make a new object");
+
+        ApiResponse response = messageExtractorClient.analyzeMessage(list);
+        log.info("Request completed");
+        log.info("Response: {}", response);
+
+
+
+
+
+    }
     public List<OutputMessage> extractAll(List<SourceMessage> messages){
         List<OutputMessage> outputMessages = new ArrayList<>();
         for (SourceMessage sourceMessage : messages){
@@ -87,7 +131,7 @@ public class SourceMessageService {
                     outputMessage.setText(imageReaderService.extractText(sourceMessage));
                 }
                 else if (sourceMessage.getContentType().equalsIgnoreCase("text/plain")){
-                    outputMessage.setText(new String(sourceMessage.getFileData(), StandardCharsets.UTF_8));
+                    outputMessage.setText(sourceMessage.getCaption());
                 }
                 else if (sourceMessage.getContentType().equalsIgnoreCase("application/vnd.openxmlformats-officedocument.presentationml.presentation")){
                     outputMessage.setText(pptReaderService.extractText(sourceMessage));
@@ -135,16 +179,7 @@ public class SourceMessageService {
         }
         else  {
             log.info("Found the message to be deleted, sourceId: {}", potentialDeletees.get(0).getId());
-            sourceMessageRepo.deleteById(potentialDeletees.get(0).getId());
-            try{
-                log.info("Sending request to entity manager to delete the messages");
-                ApiResponse apiResponse = entityManagerClient.deleteMessage(potentialDeletees.get(0).getId());
-                log.info("Deletion request successfully processed");
-            }
-            catch (Exception e){
-                log.error("Issue in deletion from entity manager");
-                throw new RuntimeException("issue in deletion from entity manager");
-            }
+             deleteMessageService.deleteMessage((potentialDeletees.get(0)));
 
             //now make an api call to delete the message in message extractor.
         }

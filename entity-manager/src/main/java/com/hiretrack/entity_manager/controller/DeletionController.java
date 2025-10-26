@@ -24,7 +24,7 @@ public class DeletionController {
     @DeleteMapping
     public ResponseEntity<ApiResponse> deleteMessage(@RequestBody Long sourceId){
         try{
-            log.info("Request to delete received");
+            log.info("Request to delete received,{}",sourceId);
             deletionService.delete(sourceId);
             log.info("deletion completed");
 

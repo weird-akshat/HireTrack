@@ -1,9 +1,6 @@
 package com.hiretrack.message_extractor.controller;
 
-import com.hiretrack.message_extractor.dtos.ApiResponse;
-import com.hiretrack.message_extractor.dtos.ChunkMessageDTO;
-import com.hiretrack.message_extractor.dtos.MessageDeletionRequest;
-import com.hiretrack.message_extractor.dtos.OutputMessage;
+import com.hiretrack.message_extractor.dtos.*;
 import com.hiretrack.message_extractor.service.SourceMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -52,6 +49,20 @@ public class MessageController {
             log.error("Error in deleting message");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        }
+    }
+    @PutMapping
+    public ResponseEntity<ApiResponse> updateMessage(@RequestBody MessageEditRequest messageEditRequest){
+        log.info("Received request to edit message: {}",messageEditRequest.toString());
+
+        try{
+            sourceMessageService.edit(messageEditRequest);
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"edit message request completed"),HttpStatus.OK);
+        }
+        catch (Exception e){
+            log.error("Ran into error during the edit message request.");
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

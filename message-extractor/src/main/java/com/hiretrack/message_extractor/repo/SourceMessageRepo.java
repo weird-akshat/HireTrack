@@ -15,4 +15,5 @@ public interface SourceMessageRepo extends JpaRepository<SourceMessage, Long> {
     @Override
     @Modifying
     void deleteById(Long id);
+    List<SourceMessage> findByCaption(String caption);
 }
