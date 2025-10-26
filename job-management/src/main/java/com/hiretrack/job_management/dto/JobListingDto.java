@@ -11,6 +11,7 @@ import java.util.Map;
 @Builder
 @Data
 public class JobListingDto {
+    private long id;
     private long sourceId;
     private String companyName;
     private String offerType;
@@ -20,12 +21,12 @@ public class JobListingDto {
     private String stipend;
     private String accommodationAllowance;
     private String onConversionCTC;
+    private LocalDateTime dateOT;
+    private LocalDateTime dateInterview;
     private double minCGPA;
     private int percentage10th;
     private int percentage12th;
     private int percentageDiploma;
-    private LocalDateTime dateOT;
-    private LocalDateTime dateInterview;
     private LocalDateTime deadline;
     private List<String> eligibleBranches;
     private List<String> eligibilityCriteria;
