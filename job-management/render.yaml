@@ -3,4 +3,5 @@ services:
     name: job-management
     env: docker
     rootDir: job-management
+    dockerfilePath: job-management/Dockerfile
     plan: free
