@@ -5,16 +5,16 @@ FROM eclipse-temurin:17-jdk-jammy AS builder
 
 WORKDIR /app
 
-# Copy Maven files and download dependencies
-COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
+# Copy Maven wrapper and config files
+COPY job-management/pom.xml .
+COPY job-management/mvnw .
+COPY job-management/.mvn .mvn
 
-# Download dependencies (for faster rebuilds)
+# Download dependencies
 RUN ./mvnw dependency:go-offline -B
 
 # Copy the source code
-COPY src ./src
+COPY job-management/src ./src
 
 # Build the application
 RUN ./mvnw clean package -DskipTests

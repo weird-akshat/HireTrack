@@ -2,6 +2,5 @@ services:
   - type: web
     name: job-management
     runtime: docker
-    rootDir: job-management
-    dockerfilePath: job-management/Dockerfile
+    dockerfilePath: Dockerfile   # Now at repo root
     plan: free
