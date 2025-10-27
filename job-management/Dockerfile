@@ -1,14 +1,36 @@
-# Use lightweight Java 17 runtime (Temurin is the official Eclipse JDK)
-FROM eclipse-temurin:17-jdk-jammy
+# ================================
+# Stage 1: Build the application
+# ================================
+FROM eclipse-temurin:17-jdk-jammy AS builder
 
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy your built JAR file into the container
-COPY target/job-management-0.0.1-SNAPSHOT.jar app.jar
+# Copy Maven files and download dependencies
+COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
 
-# Expose the Spring Boot port
+# Download dependencies (for faster rebuilds)
+RUN ./mvnw dependency:go-offline -B
+
+# Copy the source code
+COPY src ./src
+
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
+# ================================
+# Stage 2: Run the application
+# ================================
+FROM eclipse-temurin:17-jre-jammy
+
+WORKDIR /app
+
+# Copy the built JAR from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expose the port (Render will override it with $PORT)
 EXPOSE 8080
 
-# Start the Spring Boot application
+# Run the Spring Boot app
 ENTRYPOINT ["java", "-jar", "app.jar"]
