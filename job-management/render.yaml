@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: job-management
+    env: docker
+    rootDir: job-management
+    plan: free
