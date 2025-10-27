@@ -1,6 +1,7 @@
 package com.hiretrack.job_management.controller;
 
 
+import com.hiretrack.job_management.dto.AppUserDto;
 import com.hiretrack.job_management.dto.JwtRequest;
 import com.hiretrack.job_management.dto.JwtResponse;
 import com.hiretrack.job_management.dto.SignupRequest;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +38,27 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<AppUserDto> getUserDetails(){
+        try{
+            return new ResponseEntity<>(authService.getUserDetails(),HttpStatus.OK);
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
+    }
+
+    @PutMapping("/{cgpa}/{branch}")
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable double cgpa, @PathVariable String branch){
+        if (cgpa>10 || cgpa <0){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        authService.update(branch,cgpa);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @PostMapping("/signup")
     public ResponseEntity<JwtResponse> signup(@RequestBody SignupRequest signupRequest){
         log.info("Signup req: {}",signupRequest.toString());

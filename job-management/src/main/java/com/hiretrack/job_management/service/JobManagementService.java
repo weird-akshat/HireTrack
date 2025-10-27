@@ -69,8 +69,9 @@ public class JobManagementService {
 
     }
    public List<ShortlistDto> getShortlists(Long jobId){
+        log.info("FINDING SHORTLISTS");
         List<Shortlist> shortlists = shortlistRepo.findByJobListingId(jobId);
-
+        log.info("Shortlists found: {}",shortlists.toString());
         return shortlists.stream().map(ShortlistMapper::toDto).collect(Collectors.toList());
    }
 

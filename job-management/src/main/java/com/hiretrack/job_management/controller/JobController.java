@@ -80,7 +80,7 @@ public class JobController {
             return new ResponseEntity<>(jobManagementService.getShortlists(jobListingId),HttpStatus.OK);
         }
         catch (Exception e){
-            log.error("Error in getting shortlists");
+            log.error("Error in getting shortlists: {}",e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
