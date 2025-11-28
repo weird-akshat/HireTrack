@@ -2,7 +2,7 @@
 
 **HireTrack** is an automated application designed to streamline the structuring and displaying of placement information received via a college WhatsApp group.
 
-## 🚀 Automation Workflow
+## Automation Workflow
 
 1.  **Ingestion:** The system listens for and captures information from WhatsApp.
 2.  **Extraction:** It reads various formats (PDF, DOC, PPT, Sheets, Text) and stores the raw source message in the database.
@@ -13,13 +13,9 @@
 
 ---
 
-## 🏗 Microservices Architecture
+## Microservices Architecture
 
 The system is composed of four primary microservices per job, plus management services.
-
-
-
-[Image of microservices architecture diagram]
 
 
 ### 1. Message Listener Service
@@ -61,7 +57,7 @@ The system is composed of four primary microservices per job, plus management se
 
 ---
 
-## ⚙️ Infrastructure & Management
+## Infrastructure & Management
 
 ### Eureka Server
 Acts as the **Service Registry** (Discovery Server) for all microservices, ensuring they can communicate with each other dynamically.
