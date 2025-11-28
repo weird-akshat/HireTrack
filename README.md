@@ -1,44 +1,72 @@
 # HireTrack
-This is an application built to automate strucutring and displaying placement information received from a college's whatsapp group.
 
-Automation workflow
-The workflow is, getting the information from whatsapp.
-Reading(pdf,doc,ppt,sheeet,text) and storing it in database (source message).
-The read message is then transformed to a structured format.
-Then it is either stored in the database, or if it's a dependent object(like shortlists/notifcations/updates being linked to a job listing), then the job listing is found, and further actions is taken on it. 
+**HireTrack** is an automated application designed to streamline the structuring and displaying of placement information received via a college WhatsApp group.
 
-There are 4 microservices made for each job. 
-MessageListener- Sends whatever information is recieved to messageExtractor.
-messageExtractor- Extractor takes out the message and converts it to a text format.
-messageAnalyzer- Sends the text to an LLM to classify it and then structure it according to the object.
-EntityManager- Stores the object in the database.
+## 🚀 Automation Workflow
 
-Message Listner Service:
-Functionality :- Listens to whatsapp messages.
-Implementation Details:
-- Whenever a message comes, the service starts the time counter for 2 minutes, after which it sends the message if no new message interrupts during that time. If interrupted with another message, it accumulates and stores the message with the last one and resets the timer to 2 minutes again. (Possible infinite execution, have a 10 message limit here for accumulation). Once the timer is up, the message is sent to the [[Message Extractor]].
-- Also whenever a new message arrives, a job is scheduled to check the message again after the editing time window is over. If the message is found to be changed, then it is sent to the message extractor to make the required changes.
-- When a message gets deleted, check the timestamp of the deleted message and send it to the [[Message Extractor]] to delete. If multiple messages have the same timestamp, send those too with the request to filter in message extractor.
+1.  **Ingestion:** The system listens for and captures information from WhatsApp.
+2.  **Extraction:** It reads various formats (PDF, DOC, PPT, Sheets, Text) and stores the raw source message in the database.
+3.  **Transformation:** The raw message is converted into a structured text format.
+4.  **Action:** The structured data is either:
+    * Stored directly in the database.
+    * Linked to an existing Job Listing (if it is a dependent object like a shortlist, notification, or update).
 
-Message Extractor Service:
-- Stores the message to the database and gets back the id (which will be later sent to [[Message Analyzer]] ). This is done to keep track of the source message.
-- Reads all types of media and texts.
-- Deletion request filters the source message to delete and makes an api call to delete all the objects created with that source message.
-- Edit request uses the delete functionality to delete the objects, and then creates a new one entirely. (ToDo: Change the job listing id of all the other objects to this new object created.)
+---
 
-Message Anaylzer Service:
-  - Classifies the received text with an LLM and creates the required object. (Essentially used for classification and converstion to structured output for an unstructured text input)
-  - Calls on the entity manager to store the output.
+## 🏗 Microservices Architecture
 
-Entity Manager:
-  - Manages the database and provides the endpoints to delete messages to the listener service.
-  - Stores the structured output in the database.
-  - Links dependent objects (like job updates, job notifications, shortlists). Finds the job listing with the help of company name and the job role.
-  - In case of job updates, the whole object is sent back to the message analyzer to update the joblisting.
+The system is composed of four primary microservices per job, plus management services.
 
-Eureka Server:
-- Service registry for all the services.
 
-Job Management:
-- Provides api to display all the information regarding the jobs. Basic CRUD.
-- JWT Secured.
+
+[Image of microservices architecture diagram]
+
+
+### 1. Message Listener Service
+**Functionality:** Actively listens to WhatsApp messages.
+
+**Implementation Details:**
+* **Accumulation Logic:** When a message arrives, a 2-minute timer starts.
+    * If no new messages arrive, the message is sent.
+    * If interrupted by a new message, the text is accumulated with the previous one, and the timer resets to 2 minutes.
+    * *Constraint:* There is a **10-message limit** for accumulation to prevent infinite execution.
+    * Once the timer expires, the payload is sent to the **Message Extractor**.
+* **Edit Handling:** When a new message arrives, a job is scheduled to re-check the message after the editing time window closes. If changes are detected, the updated message is sent to the Message Extractor.
+* **Deletion Handling:** If a message is deleted, the service checks the timestamp. It sends a request to the **Message Extractor** to delete objects matching that timestamp.
+
+### 2. Message Extractor Service
+**Functionality:** Processes raw input and manages source data.
+
+* **Source Tracking:** Stores the raw message in the database and retrieves an ID to maintain a link to the source. This ID is passed to the **Message Analyzer**.
+* **Media Support:** Capable of reading all types of media and text files.
+* **Deletion Requests:** Filters the source message by timestamp and triggers an API call to delete all objects associated with that specific source message.
+* **Edit Requests:** Currently uses the delete functionality to remove old objects and creates entirely new ones.
+    * *ToDo:* Update the logic so that the `job_listing_id` of dependent objects acts as a foreign key to the newly created object.
+
+### 3. Message Analyzer Service
+**Functionality:** Intelligent classification and structuring.
+
+* **LLM Integration:** Sends the extracted text to a Large Language Model (LLM).
+* **Classification:** Classifies the intent of the message (e.g., New Job, Update, Shortlist).
+* **Structuring:** Converts unstructured text input into a defined JSON object.
+* **Handoff:** Calls the **Entity Manager** to store the result.
+
+### 4. Entity Manager Service
+**Functionality:** Database management and object linking.
+
+* **Storage:** Persists the structured output into the database.
+* **Dependency Linking:** Links dependent objects (Job Updates, Notifications, Shortlists) to the parent Job Listing by matching the **Company Name** and **Job Role**.
+* **Update Handling:** In the case of a "Job Update," the full object is sent back to the **Message Analyzer** to modify the existing Job Listing.
+* **Management:** Provides endpoints for the Listener Service to request message deletions.
+
+---
+
+## ⚙️ Infrastructure & Management
+
+### Eureka Server
+Acts as the **Service Registry** (Discovery Server) for all microservices, ensuring they can communicate with each other dynamically.
+
+### Job Management Service
+* **API:** Provides endpoints to display all job-related information.
+* **Operations:** Handles basic CRUD (Create, Read, Update, Delete) operations.
+* **Security:** Secured using **JWT (JSON Web Tokens)**.
